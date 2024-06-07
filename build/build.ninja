@@ -58,7 +58,41 @@ build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
 build edit_cache: phony CMakeFiles/edit_cache.util
 
 # =============================================================================
+# Object build statements for STATIC_LIBRARY target particle
+
+
+#############################################
+# Order-only phony target for particle
+
+build cmake_object_order_depends_target_particle: phony || CMakeFiles/particle.dir
+
+build CMakeFiles/particle.dir/particle.cpp.o: CXX_COMPILER__particle_Debug ../particle.cpp || cmake_object_order_depends_target_particle
+  DEP_FILE = CMakeFiles/particle.dir/particle.cpp.o.d
+  FLAGS = -O3 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -std=gnu++2a
+  OBJECT_DIR = CMakeFiles/particle.dir
+  OBJECT_FILE_DIR = CMakeFiles/particle.dir
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target particle
+
+
+#############################################
+# Link the static library libparticle.a
+
+build libparticle.a: CXX_STATIC_LIBRARY_LINKER__particle_Debug CMakeFiles/particle.dir/particle.cpp.o
+  ARCH_FLAGS = -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
+  LANGUAGE_COMPILE_FLAGS = -O3 -g
+  OBJECT_DIR = CMakeFiles/particle.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = libparticle.a
+  TARGET_PDB = particle.a.dbg
+
+# =============================================================================
 # Target aliases.
+
+build particle: phony libparticle.a
 
 # =============================================================================
 # Folder targets.
@@ -68,7 +102,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 #############################################
 # Folder: /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build
 
-build all: phony
+build all: phony libparticle.a
 
 # =============================================================================
 # Built-in targets
