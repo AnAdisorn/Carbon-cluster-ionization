@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(carbon-cluster-ionization VERSION 0.0.1)
+
+# compiler
+set(CMAKE_CXX_STANDARD 20)
+
+add_compile_options(-Wall -Wextra)
+set(CMAKE_CXX_FLAGS "-O3")
