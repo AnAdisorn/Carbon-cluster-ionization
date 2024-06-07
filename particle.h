@@ -48,4 +48,10 @@ public:
     void PPForce(Particle &obj) override;
 };
 
+class Electron : public Particle
+{
+public:
+    void PPForce(Particle &obj) override;
+};
+
 #endif /* end of include guard: PARTICLE_H */

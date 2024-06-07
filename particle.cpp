@@ -5,6 +5,7 @@ Particle::Particle(const double &mass, const double &charge, const Vector3d &pos
     m = mass;
     q = charge;
     x = position;
+    ResetAll(); // set force and velocity to zero
 }
 
 void Particle::ResetForce()
@@ -81,6 +82,15 @@ void Atom::PPForce(Particle &obj)
     }
     // Add Coulomb force
     df += q * obj.q / (r * r) * dr;
+    AddForce(df);
+    obj.AddForce(-df);
+}
+
+void Electron::PPForce(Particle &obj)
+{
+    Vector3d dr = obj.x - x; // relative postion
+    double r = dr.norm();    // relative distance
+    Vector3d df = q * obj.q / (r * r) * dr;
     AddForce(df);
     obj.AddForce(-df);
 }
