@@ -101,8 +101,8 @@ void Atom::PPForce(Particle &obj)
     }
     // Add Coulomb force (applicable to all charged particles)
     df += q * obj.q / (r * r) * dr;
-    AddForce(df);
-    obj.AddForce(-df);
+    AddForce(-df);
+    obj.AddForce(df);
 }
 
 // **Electron Class (derived from Particle)**
@@ -114,6 +114,6 @@ void Electron::PPForce(Particle &obj)
     Vector3d dr = obj.x - x; // relative postion
     double r = dr.norm();    // relative distance
     Vector3d df = q * obj.q / (r * r) * dr;
-    AddForce(df);
-    obj.AddForce(-df);
+    AddForce(-df);
+    obj.AddForce(df);
 }
