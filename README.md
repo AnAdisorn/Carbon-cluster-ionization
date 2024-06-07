@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b436812 (Initial commit)
-# Modern Numerics for Theoretical Physics
-
+# Carbon cluster ionisation
+Simulation of carbon cluster ionised by laser
 
 
 ## Getting started
