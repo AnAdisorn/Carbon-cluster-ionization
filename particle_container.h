@@ -6,7 +6,7 @@
 #include <vector>
 
 // Structure to represent a particle
-struct particle
+struct Particle
 {
     std::string name;                            // Name of the particle
     std::string type;                            // Type of the particle
@@ -81,7 +81,7 @@ public:
 
 private:
     // Internal storage for particles as a vector
-    std::vector<particle> particles_;
+    std::vector<Particle> particles_;
 };
 
 #endif /* end of include guard: PARTICLE_CONTAINER_H */
