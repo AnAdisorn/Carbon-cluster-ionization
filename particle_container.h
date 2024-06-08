@@ -88,5 +88,4 @@ private:
     vector<particle> particles;
 };
 
-// End of include guard to prevent multiple inclusions
 #endif /* end of include guard: PARTICLE_CONTAINER_H */
