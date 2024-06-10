@@ -3,7 +3,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "libparticle.a"
+			"path" : "libparticle_container.a"
 		}
 	],
 	"backtrace" : 1,
@@ -72,9 +72,9 @@
 			]
 		}
 	],
-	"id" : "particle::@6890427a1f51a3e7e1df",
-	"name" : "particle",
-	"nameOnDisk" : "libparticle.a",
+	"id" : "particle_container::@6890427a1f51a3e7e1df",
+	"name" : "particle_container",
+	"nameOnDisk" : "libparticle_container.a",
 	"paths" : 
 	{
 		"build" : ".",
@@ -95,7 +95,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "particle.cpp",
+			"path" : "particle_container.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

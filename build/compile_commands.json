@@ -1,7 +1,7 @@
 [
 {
   "directory": "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build",
-  "command": "/usr/bin/clang++ -O3 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -std=gnu++2a -o CMakeFiles/particle.dir/particle.cpp.o -c /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/particle.cpp",
-  "file": "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/particle.cpp"
+  "command": "/usr/bin/clang++ -O3 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -std=gnu++2a -o CMakeFiles/particle_container.dir/particle_container.cpp.o -c /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/particle_container.cpp",
+  "file": "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/particle_container.cpp"
 }
 ]

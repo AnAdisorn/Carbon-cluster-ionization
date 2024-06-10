@@ -58,41 +58,41 @@ build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
 build edit_cache: phony CMakeFiles/edit_cache.util
 
 # =============================================================================
-# Object build statements for STATIC_LIBRARY target particle
+# Object build statements for STATIC_LIBRARY target particle_container
 
 
 #############################################
-# Order-only phony target for particle
+# Order-only phony target for particle_container
 
-build cmake_object_order_depends_target_particle: phony || CMakeFiles/particle.dir
+build cmake_object_order_depends_target_particle_container: phony || CMakeFiles/particle_container.dir
 
-build CMakeFiles/particle.dir/particle.cpp.o: CXX_COMPILER__particle_Debug ../particle.cpp || cmake_object_order_depends_target_particle
-  DEP_FILE = CMakeFiles/particle.dir/particle.cpp.o.d
+build CMakeFiles/particle_container.dir/particle_container.cpp.o: CXX_COMPILER__particle_container_Debug ../particle_container.cpp || cmake_object_order_depends_target_particle_container
+  DEP_FILE = CMakeFiles/particle_container.dir/particle_container.cpp.o.d
   FLAGS = -O3 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -std=gnu++2a
-  OBJECT_DIR = CMakeFiles/particle.dir
-  OBJECT_FILE_DIR = CMakeFiles/particle.dir
+  OBJECT_DIR = CMakeFiles/particle_container.dir
+  OBJECT_FILE_DIR = CMakeFiles/particle_container.dir
 
 
 # =============================================================================
-# Link build statements for STATIC_LIBRARY target particle
+# Link build statements for STATIC_LIBRARY target particle_container
 
 
 #############################################
-# Link the static library libparticle.a
+# Link the static library libparticle_container.a
 
-build libparticle.a: CXX_STATIC_LIBRARY_LINKER__particle_Debug CMakeFiles/particle.dir/particle.cpp.o
+build libparticle_container.a: CXX_STATIC_LIBRARY_LINKER__particle_container_Debug CMakeFiles/particle_container.dir/particle_container.cpp.o
   ARCH_FLAGS = -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
   LANGUAGE_COMPILE_FLAGS = -O3 -g
-  OBJECT_DIR = CMakeFiles/particle.dir
+  OBJECT_DIR = CMakeFiles/particle_container.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = libparticle.a
-  TARGET_PDB = particle.a.dbg
+  TARGET_FILE = libparticle_container.a
+  TARGET_PDB = particle_container.a.dbg
 
 # =============================================================================
 # Target aliases.
 
-build particle: phony libparticle.a
+build particle_container: phony libparticle_container.a
 
 # =============================================================================
 # Folder targets.
@@ -102,7 +102,7 @@ build particle: phony libparticle.a
 #############################################
 # Folder: /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build
 
-build all: phony libparticle.a
+build all: phony libparticle_container.a
 
 # =============================================================================
 # Built-in targets
