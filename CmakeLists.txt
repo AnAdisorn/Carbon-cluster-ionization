@@ -9,4 +9,4 @@ add_compile_options(-Wall -Wextra)
 set(CMAKE_CXX_FLAGS "-O3")
 
 # targets
-add_library(particle_container ${CMAKE_CURRENT_SOURCE_DIR}/particle_container.cpp)
+add_library(particle_container STATIC src/particle_container.cpp)
