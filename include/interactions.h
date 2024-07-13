@@ -52,4 +52,17 @@ Eigen::Vector3d calculateLJForce(const std::string type1, const std::string type
 // Calculate force from Electromagnetic field
 Eigen::Vector3d calculateEMForce(const std::string type, const Eigen::Vector3d v, const Eigen::Vector3d E, const Eigen::Vector3d B);
 
+// Function to create sorted pair of strings
+inline std::pair<std::string, std::string> createPair(std::string str1, std::string str2)
+{
+    if (str1.compare(str2) < 0)
+    {
+        return {str1, str2};
+    }
+    else
+    {
+        return {str2, str1};
+    }
+}
+
 #endif /* end of include guard: INTERACTIONS_H */

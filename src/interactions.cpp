@@ -38,15 +38,7 @@ Eigen::Vector3d calculateLJForce(const std::string type1, const std::string type
     double r21_norm = r21.norm();
     r21.normalized();
 
-    std::pair<std::string, std::string> pair;
-    if (type1.compare(type2) < 0)
-    {
-        pair = {type1, type2};
-    }
-    else
-    {
-        pair = {type2, type1};
-    }
+    std::pair<std::string, std::string> pair = createPair(type1, type2);
 
     PairParameters pair_params = PairParametersMap[pair];
     double r_ratio = pair_params.kR0 / r21_norm;
