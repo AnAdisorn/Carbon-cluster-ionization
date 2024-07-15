@@ -31,7 +31,7 @@ Vector3d updateVelocityVay(const std::string type, const Vector3d &v, const Vect
     Vector3d u_prime = u_half + E * q * dt / (2 * m);
     Vector3d tau = B * q * dt / (2 * m);
     double tau_norm = tau.norm();
-    double u_star = u_prime.dot(tau) / kC;
+    double u_star = u_prime.dot(tau) / c;
     double gamma_prime = gammaU(u_prime);
     double sigma = pow(gamma_prime, 2) - pow(tau_norm, 2);
     double gamma_next = sqrt((sigma + sqrt(pow(sigma, 2) + 4 * (pow(tau_norm, 2) + pow(u_star, 2)))) / 2);
@@ -54,7 +54,7 @@ Vector3d updateVelocityHC(const std::string type, const Vector3d &v, const Vecto
     double g_minus = gammaU(u_minus);
     Vector3d tau = B * q * dt / (2 * m);
     double tau_norm = tau.norm();
-    double u_star = u_minus.dot(tau) / kC;
+    double u_star = u_minus.dot(tau) / c;
     double sigma = pow(g_minus, 2) - pow(tau_norm, 2);
     double gamma_plus = sqrt((sigma + sqrt(pow(sigma, 2) + 4 * (pow(tau_norm, 2) + pow(u_star, 2)))) / 2);
     Vector3d t = tau / gamma_plus;
