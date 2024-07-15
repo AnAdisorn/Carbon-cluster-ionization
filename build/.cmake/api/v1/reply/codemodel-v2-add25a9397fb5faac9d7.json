@@ -14,7 +14,8 @@
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -29,12 +30,20 @@
 					"name" : "carbon-cluster-ionization",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
 			"targets" : 
 			[
+				{
+					"directoryIndex" : 0,
+					"id" : "interactions::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-interactions-Debug-d54c73eb6042a0de45b9.json",
+					"name" : "interactions",
+					"projectIndex" : 0
+				},
 				{
 					"directoryIndex" : 0,
 					"id" : "particle_container::@6890427a1f51a3e7e1df",

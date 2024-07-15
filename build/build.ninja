@@ -58,6 +58,38 @@ build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
 build edit_cache: phony CMakeFiles/edit_cache.util
 
 # =============================================================================
+# Object build statements for STATIC_LIBRARY target interactions
+
+
+#############################################
+# Order-only phony target for interactions
+
+build cmake_object_order_depends_target_interactions: phony || CMakeFiles/interactions.dir
+
+build CMakeFiles/interactions.dir/src/interactions.cpp.o: CXX_COMPILER__interactions_Debug ../src/interactions.cpp || cmake_object_order_depends_target_interactions
+  DEP_FILE = CMakeFiles/interactions.dir/src/interactions.cpp.o.d
+  FLAGS = -O3 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -std=gnu++2a
+  OBJECT_DIR = CMakeFiles/interactions.dir
+  OBJECT_FILE_DIR = CMakeFiles/interactions.dir/src
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target interactions
+
+
+#############################################
+# Link the static library libinteractions.a
+
+build libinteractions.a: CXX_STATIC_LIBRARY_LINKER__interactions_Debug CMakeFiles/interactions.dir/src/interactions.cpp.o
+  ARCH_FLAGS = -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
+  LANGUAGE_COMPILE_FLAGS = -O3 -g
+  OBJECT_DIR = CMakeFiles/interactions.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = libinteractions.a
+  TARGET_PDB = interactions.a.dbg
+
+# =============================================================================
 # Object build statements for STATIC_LIBRARY target particle_container
 
 
@@ -92,6 +124,8 @@ build libparticle_container.a: CXX_STATIC_LIBRARY_LINKER__particle_container_Deb
 # =============================================================================
 # Target aliases.
 
+build interactions: phony libinteractions.a
+
 build particle_container: phony libparticle_container.a
 
 # =============================================================================
@@ -102,7 +136,7 @@ build particle_container: phony libparticle_container.a
 #############################################
 # Folder: /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build
 
-build all: phony libparticle_container.a
+build all: phony libinteractions.a libparticle_container.a
 
 # =============================================================================
 # Built-in targets

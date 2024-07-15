@@ -1,3 +1,4 @@
 /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build/CMakeFiles/rebuild_cache.dir
 /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build/CMakeFiles/edit_cache.dir
+/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build/CMakeFiles/interactions.dir
 /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build/CMakeFiles/particle_container.dir

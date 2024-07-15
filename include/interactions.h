@@ -46,7 +46,9 @@ extern std::unordered_map<std::pair<std::string, std::string>, PairParameters>
 extern std::unordered_map<std::string, IonisationParameters>
     IonisationParametersMap;
 
-// Calculate interactions from Lennard-Jones Potential between two types of particles
+// Calculate potential from Lennard-Jones Potential between two types of particles
+double calculateLJPotential(const std::string type1, const std::string type2, const Eigen::Vector3d &r1, const Eigen::Vector3d &r2);
+// Calculate force from Lennard-Jones Potential between two types of particles
 Eigen::Vector3d calculateLJForce(const std::string type1, const std::string type2, const Eigen::Vector3d &r1, const Eigen::Vector3d &r2);
 
 // Calculate force from Electromagnetic field
