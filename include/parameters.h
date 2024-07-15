@@ -4,14 +4,14 @@
 #include <map>
 
 // Particle parameters that are independent of other particles
-struct PaticleParameters
+struct ParticleParameters
 {
     const int kM; // mass
     const int kQ; // charge
 
     // Constructor
-    PaticleParameters() : kM(), kQ() {}
-    PaticleParameters(int kM, int kQ) : kM(kM), kQ(kQ) {}
+    ParticleParameters() : kM(), kQ() {}
+    ParticleParameters(int kM, int kQ) : kM(kM), kQ(kQ) {}
 };
 
 // Particle parameters that are dependent of other particles, i.e. Lennard-Jones Potential
@@ -28,16 +28,22 @@ struct PairParameters
 // Particle parameters for ionisation
 struct IonisationParameters
 {
-    const int kN, kL, kM;
+    const int kZ, kN, kL, kM;
     const double kEi;
+    double kCnl_sqr, kFlm;
 
     // Constructor
-    IonisationParameters() : kN(), kL(), kM(), kEi() {}
-    IonisationParameters(int kN, int kL, int kM, double kEi) : kN(kN), kL(kL), kM(kM), kEi(kEi) {}
+    IonisationParameters(int kZ, int kN, int kL, int kM, double kEi) : kZ(kZ), kN(kN), kL(kL), kM(kM), kEi(kEi)
+    {
+        double n_star = kZ / sqrt(2 * kEi);
+        double l_star = n_star - 1;
+        kCnl_sqr = pow(2, 2 * n_star) / (n_star * tgamma(n_star + l_star + 1) * tgamma(n_star - l_star));
+        kFlm = (2*kL + 1) * tgamma(kL + abs(kM) + 1) / (pow(2, abs(kM)) * tgamma(abs(kM) + 1) * tgamma(kL - abs(kM) + 1));
+    }
 };
 
 // Map particle name to ParticleParameters
-extern std::map<std::string, PaticleParameters>
+extern std::map<std::string, ParticleParameters>
     ParticleParametersMap;
 
 // Map pair of particle names to PairParameters

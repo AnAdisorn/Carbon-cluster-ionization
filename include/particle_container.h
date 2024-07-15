@@ -1,18 +1,20 @@
 #ifndef PARTICLE_CONTAINER_H
 #define PARTICLE_CONTAINER_H
 
-#include "Eigen/Dense"
+#include "vector.h"
 #include <string>
 #include <vector>
 
 // Structure to represent a particle
 struct particle
 {
-    std::string name;                            // Name of the particle
-    std::string type;                            // Type of the particle
-    Eigen::Vector3d a = Eigen::Vector3d::Zero(); // Acceleration (default to zero)
-    Eigen::Vector3d v = Eigen::Vector3d::Zero(); // Velocity (default to zero)
-    Eigen::Vector3d x = Eigen::Vector3d::Zero(); // Position (default to zero)
+    std::string name; // Name of the particle
+    std::string type; // Type of the particle
+    Vector3d a;       // Acceleration (default to zero)
+    Vector3d v;       // Velocity (default to zero)
+    Vector3d x;       // Position (default to zero)
+
+    // Constructor
 };
 
 // Class to represent a container of particles
@@ -35,10 +37,10 @@ public:
     void setType(const int i, const std::string &type);
 
     // Get the acceleration of a particle at a specific index
-    const Eigen::Vector3d getAcceleration(const int i) const;
+    const Vector3d getAcceleration(const int i) const;
 
     // Set the acceleration of a particle at a specific index
-    void setAcceleration(const int i, const Eigen::Vector3d &a);
+    void setAcceleration(const int i, const Vector3d &a);
 
     // Reset the acceleration of a particle to zero (i.e., a = 0)
     void resetAcceleration(const int i);
@@ -47,13 +49,13 @@ public:
     void resetAllAcceleration();
 
     // Add a specified value to the acceleration of a particle
-    void addAcceleration(const int i, const Eigen::Vector3d &a);
+    void addAcceleration(const int i, const Vector3d &a);
 
     // Get the velocity of a particle at a specific index
-    const Eigen::Vector3d getVelocity(const int i) const;
+    const Vector3d getVelocity(const int i) const;
 
     // Set the velocity of a particle at a specific index
-    void setVelocity(const int i, const Eigen::Vector3d &v);
+    void setVelocity(const int i, const Vector3d &v);
 
     // Reset the velocity of a particle to zero (i.e., v = 0)
     void resetVelocity(const int i);
@@ -62,19 +64,19 @@ public:
     void resetAllVelocity();
 
     // Add a specified value to the velocity of a particle
-    void addVelocity(const int i, const Eigen::Vector3d &v);
+    void addVelocity(const int i, const Vector3d &v);
 
     // Get the position of a particle at a specific index
-    const Eigen::Vector3d getPosition(const int i) const;
+    const Vector3d getPosition(const int i) const;
 
     // Set the position of a particle at a specific index
-    void setPosition(const int i, const Eigen::Vector3d &x);
+    void setPosition(const int i, const Vector3d &x);
 
     // Add a specified value to the position of a particle
-    void addPosition(const int i, const Eigen::Vector3d &x);
+    void addPosition(const int i, const Vector3d &x);
 
     // Add a new particle to the container
-    void addParticle(std::string name, std::string type, const Eigen::Vector3d &v, const Eigen::Vector3d &x);
+    void addParticle(std::string name, std::string type, const Vector3d &v, const Vector3d &x);
 
     // Remove a particle from the container by index
     void removeParticle(const int i);
