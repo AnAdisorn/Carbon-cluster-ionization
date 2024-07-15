@@ -30,14 +30,14 @@ struct IonisationParameters
 {
     const int kZ, kN, kL, kM;
     const double kEi;
-    double kCnl_sqr, kFlm;
+    double kN_star, kCnl_sqr, kFlm;
 
     // Constructor
     IonisationParameters(int kZ, int kN, int kL, int kM, double kEi) : kZ(kZ), kN(kN), kL(kL), kM(kM), kEi(kEi)
     {
-        double n_star = kZ / sqrt(2 * kEi);
-        double l_star = n_star - 1;
-        kCnl_sqr = pow(2, 2 * n_star) / (n_star * tgamma(n_star + l_star + 1) * tgamma(n_star - l_star));
+        kN_star = kZ / sqrt(2 * kEi);
+        double l_star = kN_star - 1;
+        kCnl_sqr = pow(2, 2 * kN_star) / (kN_star * tgamma(kN_star + l_star + 1) * tgamma(kN_star - l_star));
         kFlm = (2*kL + 1) * tgamma(kL + abs(kM) + 1) / (pow(2, abs(kM)) * tgamma(abs(kM) + 1) * tgamma(kL - abs(kM) + 1));
     }
 };

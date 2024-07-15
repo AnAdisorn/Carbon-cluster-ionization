@@ -46,6 +46,6 @@ Vector3d updateVelocityVay(const std::string type, const Vector3d &v, const Vect
 Vector3d updateVelocityHC(const std::string type, const Vector3d &v, const Vector3d &E, const Vector3d &B, double dt);
 
 // Calculate ionisation rate
-double ionisationRate(const double c_nl, const double f_lm, double e_i, double f, double n_star, double m);
+double ionisationRate(const std::string type, double f);
 
 #endif /* end of include guard: FIELD_INTERACTIONS_H */

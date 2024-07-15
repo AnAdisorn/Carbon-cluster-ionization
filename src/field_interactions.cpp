@@ -2,9 +2,9 @@
 
 Vector3d updateVelocityBoris(const std::string type, const Vector3d &v, const Vector3d &E, const Vector3d &B, double dt)
 {
-    ParticleParameters params = ParticleParametersMap[type];
-    const double m = params.kM;
-    const double q = params.kQ;
+    ParticleParameters *params = &ParticleParametersMap[type];
+    const double m = params->kM;
+    const double q = params->kQ;
     Vector3d u = gammaV(v) * v;
 
     // First half electric field acceleration
@@ -20,9 +20,9 @@ Vector3d updateVelocityBoris(const std::string type, const Vector3d &v, const Ve
 
 Vector3d updateVelocityVay(const std::string type, const Vector3d &v, const Vector3d &E, const Vector3d &B, double dt)
 {
-    ParticleParameters params = ParticleParametersMap[type];
-    const double m = params.kM;
-    const double q = params.kQ;
+    ParticleParameters *params = &ParticleParametersMap[type];
+    const double m = params->kM;
+    const double q = params->kQ;
     Vector3d u = gammaV(v) * v;
 
     // Field contribution
@@ -43,9 +43,9 @@ Vector3d updateVelocityVay(const std::string type, const Vector3d &v, const Vect
 
 Vector3d updateVelocityHC(const std::string type, const Vector3d &v, const Vector3d &E, const Vector3d &B, double dt)
 {
-    ParticleParameters params = ParticleParametersMap[type];
-    const double m = params.kM;
-    const double q = params.kQ;
+    ParticleParameters *params = &ParticleParametersMap[type];
+    const double m = params->kM;
+    const double q = params->kQ;
     Vector3d u = gammaV(v) * v;
 
     // First half electric field acceleration
@@ -62,4 +62,13 @@ Vector3d updateVelocityHC(const std::string type, const Vector3d &v, const Vecto
     Vector3d u_plus = s * (u_minus + (u_minus.dot(t)) * t + u_minus.cross(t));
     // Second half electric field acceleration
     return convertU2V(u_plus + q * E * dt / (2 * m) + u_minus.cross(t));
+}
+
+double ionisationRate(const std::string type, double f)
+{
+    IonisationParameters *params = &IonisationParametersMap[type];
+    const double n_star = params->kN_star;
+    const double cnl_sqr = params->kCnl_sqr;
+    const double flm = params->kFlm;
+    const int m = params->kM;
 }
