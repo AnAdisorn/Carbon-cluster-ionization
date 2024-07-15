@@ -1,12 +1,17 @@
 [
 {
   "directory": "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build",
-  "command": "/usr/bin/clang++ -O3 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -std=gnu++2a -o CMakeFiles/interactions.dir/src/interactions.cpp.o -c /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/src/interactions.cpp",
-  "file": "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/src/interactions.cpp"
+  "command": "/usr/bin/clang++ -I../include -O3 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -std=gnu++2a -o CMakeFiles/parameters.dir/src/parameters.cpp.o -c /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/src/parameters.cpp",
+  "file": "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/src/parameters.cpp"
 },
 {
   "directory": "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build",
-  "command": "/usr/bin/clang++ -O3 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -std=gnu++2a -o CMakeFiles/particle_container.dir/src/particle_container.cpp.o -c /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/src/particle_container.cpp",
+  "command": "/usr/bin/clang++ -I../include -O3 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -std=gnu++2a -o CMakeFiles/particle_interactions.dir/src/particle_interactions.cpp.o -c /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/src/particle_interactions.cpp",
+  "file": "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/src/particle_interactions.cpp"
+},
+{
+  "directory": "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build",
+  "command": "/usr/bin/clang++ -I../include -O3 -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -Wall -Wextra -std=gnu++2a -o CMakeFiles/particle_container.dir/src/particle_container.cpp.o -c /Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/src/particle_container.cpp",
   "file": "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/src/particle_container.cpp"
 }
 ]

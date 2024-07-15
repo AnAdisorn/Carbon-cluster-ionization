@@ -49,7 +49,7 @@ void ParticleContainer::resetAcceleration(int i)
 
 void ParticleContainer::resetAllAcceleration()
 { // if (checkIndex(i))
-    for (int i = 0; i < particles_.size(); i++)
+    for (size_t i = 0; i < particles_.size(); i++)
     {
         particles_[i].a.setZero();
     }
@@ -77,7 +77,7 @@ void ParticleContainer::resetVelocity(int i)
 
 void ParticleContainer::resetAllVelocity()
 { // if (checkIndex(i))
-    for (int i = 0; i < particles_.size(); i++)
+    for (size_t i = 0; i < particles_.size(); i++)
     {
         particles_[i].v.setZero();
     }

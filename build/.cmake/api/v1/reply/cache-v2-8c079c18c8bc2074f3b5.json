@@ -1138,30 +1138,6 @@
 			"value" : "FALSE"
 		},
 		{
-			"name" : "Project_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build"
-		},
-		{
-			"name" : "Project_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics"
-		},
-		{
 			"name" : "carbon-cluster-ionization_BINARY_DIR",
 			"properties" : 
 			[
@@ -1175,54 +1151,6 @@
 		},
 		{
 			"name" : "carbon-cluster-ionization_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics"
-		},
-		{
-			"name" : "carbon-cluster_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build"
-		},
-		{
-			"name" : "carbon-cluster_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics"
-		},
-		{
-			"name" : "libsoda-cxx_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/build"
-		},
-		{
-			"name" : "libsoda-cxx_SOURCE_DIR",
 			"properties" : 
 			[
 				{

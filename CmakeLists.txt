@@ -2,12 +2,36 @@ cmake_minimum_required(VERSION 3.10)
 
 project(carbon-cluster-ionization VERSION 0.0.1)
 
-# compiler
+############################################################
+# Compiler
+############################################################
+
 set(CMAKE_CXX_STANDARD 20)
 
 add_compile_options(-Wall -Wextra)
 set(CMAKE_CXX_FLAGS "-O3")
 
-# library
+############################################################
+# Create a library
+############################################################
+
 add_library(particle_container STATIC src/particle_container.cpp)
-add_library(interactions STATIC src/interactions.cpp)
+add_library(particle_interactions STATIC src/particle_interactions.cpp)
+add_library(parameters STATIC src/parameters.cpp)
+
+target_include_directories(particle_container
+    PUBLIC 
+        include
+)
+target_include_directories(particle_interactions
+    PUBLIC 
+       include
+)
+target_include_directories(parameters
+    PUBLIC 
+       include
+)
+
+############################################################
+# Create an executable
+############################################################

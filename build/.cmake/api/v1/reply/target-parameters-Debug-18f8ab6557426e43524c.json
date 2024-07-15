@@ -3,7 +3,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "libinteractions.a"
+			"path" : "libparameters.a"
 		}
 	],
 	"backtrace" : 1,
@@ -12,7 +12,8 @@
 		"commands" : 
 		[
 			"add_library",
-			"add_compile_options"
+			"add_compile_options",
+			"target_include_directories"
 		],
 		"files" : 
 		[
@@ -26,13 +27,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 13,
+				"line" : 20,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 8,
+				"line" : 11,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 30,
 				"parent" : 0
 			}
 		]
@@ -57,6 +64,13 @@
 					"fragment" : "-std=gnu++2a"
 				}
 			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 3,
+					"path" : "/Users/adisorn/Desktop/Codes/modern-numerics-for-theoretical-physics/include"
+				}
+			],
 			"language" : "CXX",
 			"languageStandard" : 
 			{
@@ -72,9 +86,9 @@
 			]
 		}
 	],
-	"id" : "interactions::@6890427a1f51a3e7e1df",
-	"name" : "interactions",
-	"nameOnDisk" : "libinteractions.a",
+	"id" : "parameters::@6890427a1f51a3e7e1df",
+	"name" : "parameters",
+	"nameOnDisk" : "libparameters.a",
 	"paths" : 
 	{
 		"build" : ".",
@@ -95,7 +109,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/interactions.cpp",
+			"path" : "src/parameters.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

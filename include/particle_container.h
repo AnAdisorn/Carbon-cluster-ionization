@@ -1,7 +1,7 @@
 #ifndef PARTICLE_CONTAINER_H
 #define PARTICLE_CONTAINER_H
 
-#include "include/Eigen/Dense"
+#include "Eigen/Dense"
 #include <string>
 #include <vector>
 
