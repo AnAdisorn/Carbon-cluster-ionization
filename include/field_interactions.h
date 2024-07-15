@@ -1,7 +1,7 @@
 #ifndef FIELD_INTERACTIONS_H
 #define FIELD_INTERACTIONS_H
 
-#define c 137 // Light velocity in atomic unit
+#define kC 137 // Light velocity in atomic unit
 
 #include "parameters.h"
 #include "vector.h"
@@ -10,25 +10,25 @@
 // Convert v (classical velocity) to u (relativistic)
 inline Vector3d convertV2U(const Vector3d &v)
 {
-    return v / sqrt(1 - pow(v.norm() / c, 2));
+    return v / sqrt(1 - pow(v.norm() / kC, 2));
 }
 
 // Convert u (relativistic) to v (classical velocity)
 inline Vector3d convertU2V(const Vector3d &u)
 {
-    return u / sqrt(1 + pow(u.norm() / c, 2));
+    return u / sqrt(1 + pow(u.norm() / kC, 2));
 }
 
 // Calculate gamma factor from classical velocity
 inline double gammaV(const Vector3d &v)
 {
-    return 1 / sqrt(1 - pow(v.norm() / c, 2));
+    return 1 / sqrt(1 - pow(v.norm() / kC, 2));
 }
 
 // Calculate gamma factor from relativistic velocity
 inline double gammaU(const Vector3d &u)
 {
-    return sqrt(1 + pow(u.norm() / c, 2));
+    return sqrt(1 + pow(u.norm() / kC, 2));
 }
 
 inline Vector3d updateHalfPosition(const Vector3d &x, const Vector3d &v, double dt)

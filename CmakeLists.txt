@@ -17,6 +17,7 @@ set(CMAKE_CXX_FLAGS "-O3")
 
 add_library(particle_container STATIC src/particle_container.cpp)
 add_library(particle_interactions STATIC src/particle_interactions.cpp)
+add_library(field_interactions STATIC src/field_interactions.cpp)
 add_library(parameters STATIC src/parameters.cpp)
 
 target_include_directories(particle_container
@@ -24,6 +25,10 @@ target_include_directories(particle_container
         include
 )
 target_include_directories(particle_interactions
+    PUBLIC 
+       include
+)
+target_include_directories(field_interactions
     PUBLIC 
        include
 )
