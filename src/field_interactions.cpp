@@ -5,7 +5,7 @@ Vector3d updateVelocityBoris(const std::string type, const Vector3d &v, const Ve
     ParticleParameters *params = &ParticleParametersMap[type];
     const double m = params->kM;
     const double q = params->kQ;
-    Vector3d u = gammaV(v) * v;
+    Vector3d u = convertV2U(v);
 
     // First half electric field acceleration
     Vector3d u_minus = u + q * E * dt / (2 * m);
@@ -23,7 +23,7 @@ Vector3d updateVelocityVay(const std::string type, const Vector3d &v, const Vect
     ParticleParameters *params = &ParticleParametersMap[type];
     const double m = params->kM;
     const double q = params->kQ;
-    Vector3d u = gammaV(v) * v;
+    Vector3d u = convertV2U(v);
 
     // Field contribution
     Vector3d u_half = u + q * dt * (E + v.cross(B)) / (2 * m);
@@ -46,7 +46,7 @@ Vector3d updateVelocityHC(const std::string type, const Vector3d &v, const Vecto
     ParticleParameters *params = &ParticleParametersMap[type];
     const double m = params->kM;
     const double q = params->kQ;
-    Vector3d u = gammaV(v) * v;
+    Vector3d u = convertV2U(v);
 
     // First half electric field acceleration
     Vector3d u_minus = u + q * E * dt / (2 * m);
