@@ -111,9 +111,16 @@ void ParticleContainer::addParticle(std::string name, std::string type, const Ei
     p.x = x;
     p.v = v;
     particles_.push_back(p);
+    n_++;
 }
 
 void ParticleContainer::removeParticle(int i)
 { // if (checkIndex(i))
     particles_.erase(particles_.begin() + i);
+    n_--
+}
+
+size_t size() const
+{
+    return n_;
 }
