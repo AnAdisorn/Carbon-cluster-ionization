@@ -32,10 +32,10 @@ Vector3d updateVelocityVay(const std::string type, const Vector3d &v, const Vect
     Vector3d tau = B * q * dt / (2 * m);
     double tau_norm = tau.norm();
     double u_star = u_prime.dot(tau) / c;
-    double gamma_prime = gammaU(u_prime);
-    double sigma = pow(gamma_prime, 2) - pow(tau_norm, 2);
-    double gamma_next = sqrt((sigma + sqrt(pow(sigma, 2) + 4 * (pow(tau_norm, 2) + pow(u_star, 2)))) / 2);
-    Vector3d t = tau / gamma_next;
+    double g_prime = gammaU(u_prime);
+    double sigma = pow(g_prime, 2) - pow(tau_norm, 2);
+    double g_next = sqrt((sigma + sqrt(pow(sigma, 2) + 4 * (pow(tau_norm, 2) + pow(u_star, 2)))) / 2);
+    Vector3d t = tau / g_next;
     double s = 1 / (1 + pow(t.norm(), 2));
 
     return convertU2V(s * (u_prime + (u_prime.dot(t)) * t + u_prime.cross(t)));
@@ -56,8 +56,8 @@ Vector3d updateVelocityHC(const std::string type, const Vector3d &v, const Vecto
     double tau_norm = tau.norm();
     double u_star = u_minus.dot(tau) / c;
     double sigma = pow(g_minus, 2) - pow(tau_norm, 2);
-    double gamma_plus = sqrt((sigma + sqrt(pow(sigma, 2) + 4 * (pow(tau_norm, 2) + pow(u_star, 2)))) / 2);
-    Vector3d t = tau / gamma_plus;
+    double g_plus = sqrt((sigma + sqrt(pow(sigma, 2) + 4 * (pow(tau_norm, 2) + pow(u_star, 2)))) / 2);
+    Vector3d t = tau / g_plus;
     double s = 1 / (1 + pow(t.norm(), 2));
     Vector3d u_plus = s * (u_minus + (u_minus.dot(t)) * t + u_minus.cross(t));
     // Second half electric field acceleration
