@@ -80,7 +80,7 @@ public:
     void removeParticle(const int i);
 
     // Number of particles in container
-    size_t size();
+    size_t size() const;
 
 private:
     // Internal storage for particles as a vector
