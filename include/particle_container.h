@@ -79,9 +79,13 @@ public:
     // Remove a particle from the container by index
     void removeParticle(const int i);
 
+    // Number of particles in container
+    size_t size();
+
 private:
     // Internal storage for particles as a vector
     std::vector<particle> particles_;
+    size_t n_ = 0;
 };
 
 #endif /* end of include guard: PARTICLE_CONTAINER_H */
