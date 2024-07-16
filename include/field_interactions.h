@@ -5,8 +5,6 @@
 #include "vector.h"
 #include <string>
 
-static int c = 137;
-
 // Convert v (classical velocity) to u (relativistic)
 inline Vector3d convertV2U(const Vector3d &v)
 {

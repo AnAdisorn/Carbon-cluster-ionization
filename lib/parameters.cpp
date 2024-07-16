@@ -18,10 +18,10 @@ std::map<std::pair<std::string, std::string>, PairParameters>
 
 std::map<std::string, IonisationParameters>
     IonisationParametersMap{
-        {"C0", IonisationParameters(0, 2, 1, 0, .415)},
-        {"C1", IonisationParameters(1, 2, 1, 1, .897)},
-        {"C2", IonisationParameters(2, 2, 0, 0, 1.76)},
-        {"C3", IonisationParameters(3, 2, 0, 0, 2.37)},
-        {"C4", IonisationParameters(4, 1, 0, 0, 14.4)},
-        {"C5", IonisationParameters(5, 1, 0, 0, 18.0)},
+        {"C0", IonisationParameters(1, 2, 1, 0, .415)},
+        {"C1", IonisationParameters(2, 2, 1, 1, .897)},
+        {"C2", IonisationParameters(3, 2, 0, 0, 1.76)},
+        {"C3", IonisationParameters(4, 2, 0, 0, 2.37)},
+        {"C4", IonisationParameters(5, 1, 0, 0, 14.4)},
+        {"C5", IonisationParameters(6, 1, 0, 0, 18.0)},
     };

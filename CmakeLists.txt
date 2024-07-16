@@ -15,10 +15,10 @@ set(CMAKE_CXX_FLAGS "-O3")
 # Create a library
 ############################################################
 
-add_library(particle_container STATIC src/particle_container.cpp)
-add_library(particle_interactions STATIC src/particle_interactions.cpp)
-add_library(field_interactions STATIC src/field_interactions.cpp)
-add_library(parameters STATIC src/parameters.cpp)
+add_library(particle_container STATIC lib/particle_container.cpp)
+add_library(particle_interactions STATIC lib/particle_interactions.cpp)
+add_library(field_interactions STATIC lib/field_interactions.cpp)
+add_library(parameters STATIC lib/parameters.cpp)
 
 target_include_directories(particle_container
     PUBLIC 
@@ -40,3 +40,15 @@ target_include_directories(parameters
 ############################################################
 # Create an executable
 ############################################################
+
+############################################################
+# Create tests
+############################################################
+# Enable testing for the project
+enable_testing()
+
+# Test if the reference of the parameters has the same parameters as by copying the parameters
+add_executable(test_ionisation_map tests/test_ionisation_map.cpp)
+target_link_libraries(test_ionisation_map PRIVATE parameters)
+add_test(NAME test_ionisation_map
+         COMMAND test_ionisation_map)

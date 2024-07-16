@@ -3,6 +3,8 @@
 
 #include <map>
 
+const int c = 137; // Light speed constant in atomic unit
+
 // Particle parameters that are independent of other particles
 struct ParticleParameters
 {
@@ -33,12 +35,13 @@ struct IonisationParameters
     double kN_star, kCnl_sqr, kFlm;
 
     // Constructor
+    IonisationParameters() : kZ(), kN(), kL(), kM(), kEi(), kN_star(), kCnl_sqr(), kFlm() {}
     IonisationParameters(int kZ, int kN, int kL, int kM, double kEi) : kZ(kZ), kN(kN), kL(kL), kM(kM), kEi(kEi)
     {
         kN_star = kZ / sqrt(2 * kEi);
         double l_star = kN_star - 1;
         kCnl_sqr = pow(2, 2 * kN_star) / (kN_star * tgamma(kN_star + l_star + 1) * tgamma(kN_star - l_star));
-        kFlm = (2*kL + 1) * tgamma(kL + abs(kM) + 1) / (pow(2, abs(kM)) * tgamma(abs(kM) + 1) * tgamma(kL - abs(kM) + 1));
+        kFlm = (2 * kL + 1) * tgamma(kL + abs(kM) + 1) / (pow(2, abs(kM)) * tgamma(abs(kM) + 1) * tgamma(kL - abs(kM) + 1));
     }
 };
 

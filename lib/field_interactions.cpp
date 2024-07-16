@@ -66,12 +66,12 @@ Vector3d updateVelocityHC(const std::string type, const Vector3d &v, const Vecto
 
 double ionisationRate(const std::string type, double f)
 {
-    IonisationParameters *params = &IonisationParametersMap[type];
-    const double n_star = params->kN_star;
-    const double cnl_sqr = params->kCnl_sqr;
-    const double flm = params->kFlm;
-    const double ei = params->kEi;
-    const int m = params->kM;
+    IonisationParameters &params = IonisationParametersMap[type];
+    const double n_star = params.kN_star;
+    const double cnl_sqr = params.kCnl_sqr;
+    const double flm = params.kFlm;
+    const double ei = params.kEi;
+    const int m = params.kM;
 
-    return cnl_sqr * sqrt(6 / M_PI) * flm * ei *pow(2 * pow(2 * ei, 1.5) / f, 2 * n_star - abs(m) - 1.5) * exp(2 * pow(2 * ei, 1.5) / (3 * F));
+    return cnl_sqr * sqrt(6 / M_PI) * flm * ei * pow(2 * pow(2 * ei, 1.5) / f, 2 * n_star - abs(m) - 1.5) * exp(2 * pow(2 * ei, 1.5) / (3 * f));
 }
