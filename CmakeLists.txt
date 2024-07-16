@@ -15,7 +15,7 @@ set(CMAKE_CXX_FLAGS "-O3")
 # Create a library
 ############################################################
 
-add_library(particle_container STATIC lib/particle_container.cpp)
+add_library(particle_container lib/particle_container.cpp)
 add_library(particle_interactions STATIC lib/particle_interactions.cpp)
 add_library(field_interactions STATIC lib/field_interactions.cpp)
 add_library(parameters STATIC lib/parameters.cpp)
@@ -40,6 +40,12 @@ target_include_directories(parameters
 ############################################################
 # Create an executable
 ############################################################
+
+add_executable(initialise_cluster src/initialise_cluster.cpp)
+target_link_libraries(initialise_cluster 
+    PRIVATE 
+        particle_container particle_interactions parameters
+)
 
 ############################################################
 # Create tests

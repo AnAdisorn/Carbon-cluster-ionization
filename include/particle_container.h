@@ -8,13 +8,11 @@
 // Structure to represent a particle
 struct particle
 {
-    std::string name; // Name of the particle
-    std::string type; // Type of the particle
-    Vector3d a;       // Acceleration (default to zero)
-    Vector3d v;       // Velocity (default to zero)
-    Vector3d x;       // Position (default to zero)
-
-    // Constructor
+    std::string name;              // Name of the particle
+    std::string type;              // Type of the particle
+    Vector3d x = Vector3d::Zero(); // Position (default to zero)
+    Vector3d v = Vector3d::Zero(); // Velocity (default to zero)
+    Vector3d a = Vector3d::Zero(); // Acceleration (default to zero)
 };
 
 // Class to represent a container of particles

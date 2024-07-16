@@ -103,13 +103,13 @@ void ParticleContainer::addPosition(int i, const Eigen::Vector3d &x)
     particles_[i].v += x;
 }
 
-void ParticleContainer::addParticle(std::string name, std::string type, const Eigen::Vector3d &v, const Eigen::Vector3d &x)
+void ParticleContainer::addParticle(std::string name, std::string type, const Eigen::Vector3d &x, const Eigen::Vector3d &v)
 {
     particle p;
     p.name = name;
     p.type = type;
-    p.v = v;
     p.x = x;
+    p.v = v;
     particles_.push_back(p);
 }
 
