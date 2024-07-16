@@ -1,111 +1,124 @@
 #include "particle_container.h"
 
-// bool ParticleContainer::checkIndex(int i) const
-// {
-//     if (i >= 0 && i < particles.size())
-//     {
-//         return true;
-//     }
-//     else
-//     {
-//         throw std::out_of_range("Index out of bounds for particle container");
-//     }
-// }
+void Particle::applyPositionChange()
+{
+    x += dx;
+    dx.setZero();
+}
 
-const std::string ParticleContainer::getName(int i) const
-{ // if (checkIndex(i))
+const std::string
+ParticleContainer::getName(size_t i) const
+{
     return particles_[i].name;
 }
 
-void ParticleContainer::setName(int i, const std::string &name)
-{ // if (checkIndex(i))
+void ParticleContainer::setName(size_t i, const std::string &name)
+{
     particles_[i].name = name;
 }
 
-const std::string ParticleContainer::getType(int i) const
-{ // if (checkIndex(i))
+const std::string ParticleContainer::getType(size_t i) const
+{
     return particles_[i].type;
 }
 
-void ParticleContainer::setType(int i, const std::string &type)
-{ // if (checkIndex(i))
+void ParticleContainer::setType(size_t i, const std::string &type)
+{
     particles_[i].type = type;
 }
 
-const Eigen::Vector3d ParticleContainer::getAcceleration(int i) const
-{ // if (checkIndex(i))
+const Eigen::Vector3d ParticleContainer::getAcceleration(size_t i) const
+{
     return particles_[i].a;
 }
 
-void ParticleContainer::setAcceleration(int i, const Eigen::Vector3d &a)
-{ // if (checkIndex(i))
+void ParticleContainer::setAcceleration(size_t i, const Eigen::Vector3d &a)
+{
     particles_[i].a = a;
 }
 
-void ParticleContainer::resetAcceleration(int i)
-{ // if (checkIndex(i))
+void ParticleContainer::resetAcceleration(size_t i)
+{
     particles_[i].a.setZero();
 }
 
 void ParticleContainer::resetAllAcceleration()
-{ // if (checkIndex(i))
+{
     for (size_t i = 0; i < particles_.size(); i++)
     {
         particles_[i].a.setZero();
     }
 }
 
-void ParticleContainer::addAcceleration(int i, const Eigen::Vector3d &a)
-{ // if (checkIndex(i))
+void ParticleContainer::addAcceleration(size_t i, const Eigen::Vector3d &a)
+{
     particles_[i].a += a;
 }
 
-const Eigen::Vector3d ParticleContainer::getVelocity(int i) const
-{ // if (checkIndex(i))
+const Eigen::Vector3d ParticleContainer::getVelocity(size_t i) const
+{
     return particles_[i].v;
 }
 
-void ParticleContainer::setVelocity(int i, const Eigen::Vector3d &v)
-{ // if (checkIndex(i))
+void ParticleContainer::setVelocity(size_t i, const Eigen::Vector3d &v)
+{
     particles_[i].v = v;
 }
 
-void ParticleContainer::resetVelocity(int i)
-{ // if (checkIndex(i))
+void ParticleContainer::resetVelocity(size_t i)
+{
     particles_[i].v.setZero();
 }
 
 void ParticleContainer::resetAllVelocity()
-{ // if (checkIndex(i))
+{
     for (size_t i = 0; i < particles_.size(); i++)
     {
         particles_[i].v.setZero();
     }
 }
 
-void ParticleContainer::addVelocity(int i, const Eigen::Vector3d &v)
-{ // if (checkIndex(i))
+void ParticleContainer::addVelocity(size_t i, const Eigen::Vector3d &v)
+{
     particles_[i].v += v;
 }
 
-const Eigen::Vector3d ParticleContainer::getPosition(int i) const
-{ // if (checkIndex(i))
+const Eigen::Vector3d ParticleContainer::getPosition(size_t i) const
+{
     return particles_[i].x;
 }
 
-void ParticleContainer::setPosition(int i, const Eigen::Vector3d &x)
-{ // if (checkIndex(i))
+void ParticleContainer::setPosition(size_t i, const Eigen::Vector3d &x)
+{
     particles_[i].v = x;
 }
 
-void ParticleContainer::addPosition(int i, const Eigen::Vector3d &x)
-{ // if (checkIndex(i))
+void ParticleContainer::addPosition(size_t i, const Eigen::Vector3d &x)
+{
     particles_[i].v += x;
+}
+
+void ParticleContainer::addPositionChange(const size_t i, const Vector3d &dx)
+{
+    particles_[i].dx += dx;
+}
+
+void ParticleContainer::applyPositionChange(const size_t i)
+{
+    particles_[i].applyPositionChange();
+}
+
+void ParticleContainer::applyPositionChangeAll()
+{
+    for (size_t i = 0; i < n_; i++)
+    {
+        applyPositionChange(i);
+    }
 }
 
 void ParticleContainer::addParticle(std::string name, std::string type, const Eigen::Vector3d &x, const Eigen::Vector3d &v)
 {
-    particle p;
+    Particle p;
     p.name = name;
     p.type = type;
     p.x = x;
@@ -114,13 +127,13 @@ void ParticleContainer::addParticle(std::string name, std::string type, const Ei
     n_++;
 }
 
-void ParticleContainer::removeParticle(int i)
-{ // if (checkIndex(i))
+void ParticleContainer::removeParticle(size_t i)
+{
     particles_.erase(particles_.begin() + i);
-    n_--
+    n_--;
 }
 
-size_t size() const
+size_t ParticleContainer::size() const
 {
     return n_;
 }

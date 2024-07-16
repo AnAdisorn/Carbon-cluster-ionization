@@ -5,14 +5,19 @@
 #include <string>
 #include <vector>
 
-// Structure to represent a particle
-struct particle
+// Class to represent a particle
+class Particle
 {
-    std::string name;              // Name of the particle
-    std::string type;              // Type of the particle
-    Vector3d x = Vector3d::Zero(); // Position (default to zero)
-    Vector3d v = Vector3d::Zero(); // Velocity (default to zero)
-    Vector3d a = Vector3d::Zero(); // Acceleration (default to zero)
+public:
+    std::string name;               // Name of the particle
+    std::string type;               // Type of the particle
+    Vector3d x = Vector3d::Zero();  // Position (default to zero)
+    Vector3d dx = Vector3d::Zero(); // Accumulated change of position to be applied
+    Vector3d v = Vector3d::Zero();  // Velocity (default to zero)
+    Vector3d a = Vector3d::Zero();  // Acceleration (default to zero)
+
+    // Apply the accumulated change of position (dx) to position (x), after that reset the accumulated value (dx)
+    void applyPositionChange();
 };
 
 // Class to represent a container of particles
@@ -23,68 +28,77 @@ public:
     // bool checkIndex(const int i) const;
 
     // Get the name of a particle at a specific index
-    const std::string getName(const int i) const;
+    const std::string getName(const size_t i) const;
 
     // Set the name of a particle at a specific index
-    void setName(const int i, const std::string &name);
+    void setName(const size_t i, const std::string &name);
 
     // Get the type of a particle at a specific index
-    const std::string getType(const int i) const;
+    const std::string getType(const size_t i) const;
 
     // Set the type of a particle at a specific index
-    void setType(const int i, const std::string &type);
+    void setType(const size_t i, const std::string &type);
 
     // Get the acceleration of a particle at a specific index
-    const Vector3d getAcceleration(const int i) const;
+    const Vector3d getAcceleration(const size_t i) const;
 
     // Set the acceleration of a particle at a specific index
-    void setAcceleration(const int i, const Vector3d &a);
+    void setAcceleration(const size_t i, const Vector3d &a);
 
     // Reset the acceleration of a particle to zero (i.e., a = 0)
-    void resetAcceleration(const int i);
+    void resetAcceleration(const size_t i);
 
     // Reset the acceleration of all particles to zero
     void resetAllAcceleration();
 
     // Add a specified value to the acceleration of a particle
-    void addAcceleration(const int i, const Vector3d &a);
+    void addAcceleration(const size_t i, const Vector3d &a);
 
     // Get the velocity of a particle at a specific index
-    const Vector3d getVelocity(const int i) const;
+    const Vector3d getVelocity(const size_t i) const;
 
     // Set the velocity of a particle at a specific index
-    void setVelocity(const int i, const Vector3d &v);
+    void setVelocity(const size_t i, const Vector3d &v);
 
     // Reset the velocity of a particle to zero (i.e., v = 0)
-    void resetVelocity(const int i);
+    void resetVelocity(const size_t i);
 
     // Reset the velocity of all particles to zero
     void resetAllVelocity();
 
     // Add a specified value to the velocity of a particle
-    void addVelocity(const int i, const Vector3d &v);
+    void addVelocity(const size_t i, const Vector3d &v);
 
     // Get the position of a particle at a specific index
-    const Vector3d getPosition(const int i) const;
+    const Vector3d getPosition(const size_t i) const;
 
     // Set the position of a particle at a specific index
-    void setPosition(const int i, const Vector3d &x);
+    void setPosition(const size_t i, const Vector3d &x);
 
     // Add a specified value to the position of a particle
-    void addPosition(const int i, const Vector3d &x);
+    void addPosition(const size_t i, const Vector3d &x);
+
+    // Add a specified value to the accumulated position change of a particle
+    void addPositionChange(const size_t i, const Vector3d &dx);
+
+    // Appply the accumulated position change of a particle to position
+    void applyPositionChange(const size_t i);
+
+    // Appply the accumulated position change of all particle to position
+    void applyPositionChangeAll();
 
     // Add a new particle to the container
     void addParticle(std::string name, std::string type, const Vector3d &v, const Vector3d &x);
 
     // Remove a particle from the container by index
-    void removeParticle(const int i);
+    void removeParticle(const size_t i);
 
     // Number of particles in container
     size_t size() const;
 
 private:
-    // Internal storage for particles as a vector
-    std::vector<particle> particles_;
+    // Internal storage for particles as a vector of Particle
+    std::vector<Particle> particles_;
     size_t n_ = 0;
 };
 
