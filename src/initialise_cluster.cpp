@@ -7,9 +7,9 @@
 
 int main(int argc, char *argv[])
 {
-    if (!(argc - 1 == 3 || argc - 1 == 4))
+    if (!(argc - 1 == 4 || argc - 1 == 5))
     {
-        std::cout << "Requires 3 or 4 integers but " << argc - 1 << " were given."
+        std::cout << "Requires 4 or 5 inpus but " << argc - 1 << " were given."
                   << std::endl;
         return -1;
     }
@@ -24,10 +24,13 @@ int main(int argc, char *argv[])
 
     // Spacing (default or from argument)
     double d = 2.91;
-    if (argc - 1 == 4)
+    if (argc - 1 == 5)
     {
         d = std::stod(argv[4]); // Use stod for safer conversion
     }
+
+    // Number of equilibrate steps
+    int steps = std::stoi(ardv[5]);
 
     // Create container for particles
     ParticleContainer container;
@@ -43,6 +46,18 @@ int main(int argc, char *argv[])
                 Vector3d vel = Vector3d::Zero();
                 container.addParticle("carbon_" + std::to_string(c), "C0", pos, vel);
                 c++;
+            }
+        }
+    }
+
+    // Equilibrate the particles via Lennard-Jones potential
+    size_t n = container.size();
+    for (int step = 0; step < steps; step++)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = i; j < n; j++)
+            {
             }
         }
     }
