@@ -3,17 +3,17 @@
 
 #include <map>
 
-const int c = 137; // Light speed constant in atomic unit
+const double c = 137; // Light speed constant in atomic unit
 
 // Particle parameters that are independent of other particles
 struct ParticleParameters
 {
-    const int kM; // mass
-    const int kQ; // charge
+    const double kM; // mass
+    const double kQ; // charge
 
     // Constructor
     ParticleParameters() : kM(), kQ() {}
-    ParticleParameters(int kM, int kQ) : kM(kM), kQ(kQ) {}
+    ParticleParameters(double kM, double kQ) : kM(kM), kQ(kQ) {}
 };
 
 // Particle parameters that are dependent of other particles, i.e. Lennard-Jones Potential

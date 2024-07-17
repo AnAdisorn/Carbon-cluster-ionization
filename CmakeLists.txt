@@ -55,6 +55,12 @@ target_link_libraries(initialise_cluster
         particle_container particle_interactions parameters
 )
 
+add_executable(ionise_cluster src/ionise_cluster.cpp)
+target_link_libraries(ionise_cluster 
+    PRIVATE 
+        particle_container field_interactions parameters
+)
+
 ############################################################
 # Create tests
 ############################################################

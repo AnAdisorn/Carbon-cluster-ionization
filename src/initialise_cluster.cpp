@@ -2,61 +2,63 @@
 #include "particle_interactions.h"
 #include "parameters.h"
 
+#include <string>
 #include <iostream>
 #include <fstream>
 #include <filesystem>
-#include <vector>
-#include <string>
+
+namespace filesys = std::filesystem;
 
 int main(int argc, char *argv[])
 {
     // Check if given correct number of arguments
     if (!(argc - 1 == 5 || argc - 1 == 6))
     {
-        printf("Requires 5 or 6 inpus but %i were given\n", argc - 1);
+        printf("Requires 5 or 6 inputs but %i were given\n", argc - 1);
         return -1;
     }
     // Seed the random number generator (optional for better randomness)
     srand(0);
 
-    std::array<int, 3> cubic_sizes; // Size of cubic sides
-    double d = 2.91;                // Spacing (default or from argument)
-    int steps;                      // Number of equilibrate steps
-    double dt;                      // Time step size for equilibration
+    std::array<int, 3> grid_sized; // Size of grid sides
+    double d = 2.91;               // Spacing (default or from argument)
+    int steps;                     // Number of equilibrate steps
+    double dt;                     // Time step size for equilibration
 
     // Get positions from arguments
     for (int i = 1; i <= 3; ++i)
     {
         char *arg = argv[i];
-        cubic_sizes[i - 1] = std::stoi(arg); // Use stoi for safer conversion
+        grid_sized[i - 1] = std::stoi(arg); // Use stoi for safer conversion
     }
 
     // Check if spacing is given in the arguments
     if (argc - 1 == 6)
     {
-        d = std::stod(argv[4]); // Use stod for safer conversion
+        d = std::stod(argv[4]); // Grid spacing
     }
 
     // Assign number of equilibration steps and time step size
-    steps = std::stoi(argv[argc - 2]);
-    dt = std::stod(argv[argc - 1]);
+    steps = std::stoi(argv[argc - 2]); // Number of equilibration steps
+    dt = std::stod(argv[argc - 1]);    // Time step size
 
-    // Open files for writing outputs
-    auto cwd = std::filesystem::current_path(); // current working directory
-    std::filesystem::create_directories(cwd / "equilibration/positions");
+    // Configure directories for writing outputs
+    auto cwd = filesys::current_path(); // current working directory
+    filesys::create_directories(cwd / "equilibration/positions");
     auto positions_dir = cwd / "equilibration/postions";
+    // Open files for writing outputs
     std::ofstream pot_file(cwd / "equilibration/potential.pot"); // file collecting potential at each equilibration step
 
     // Create container for particles
     ParticleContainer container;
-    size_t c = 0;
 
     // Initialise particle in grid
-    for (int i = 0; i < cubic_sizes[0]; ++i)
+    size_t c = 0;
+    for (int i = 0; i < grid_sized[0]; ++i)
     {
-        for (int j = 0; j < cubic_sizes[1]; ++j)
+        for (int j = 0; j < grid_sized[1]; ++j)
         {
-            for (int k = 0; k < cubic_sizes[2]; ++k)
+            for (int k = 0; k < grid_sized[2]; ++k)
             {
                 Vector3d pos = {i * d, j * d, k * d};
                 pos += d * randomUnitVector() * 0.5; // add randomness in postion by 50%

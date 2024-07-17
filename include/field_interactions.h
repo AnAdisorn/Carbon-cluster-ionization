@@ -29,6 +29,7 @@ inline double gammaU(const Vector3d &u)
     return sqrt(1 + pow(u.norm() / c, 2));
 }
 
+// Half potition update, according velocity Verlet scheme
 inline Vector3d updateHalfPosition(const Vector3d &x, const Vector3d &v, double dt)
 {
     return x + v * dt / 2;

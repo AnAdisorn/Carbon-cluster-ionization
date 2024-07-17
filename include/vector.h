@@ -4,6 +4,7 @@
 #include "Eigen/Dense"
 
 typedef Eigen::Vector3d Vector3d;
+typedef Eigen::Vector3cd Vector3cd;
 
 inline Vector3d randomUnitVector()
 {
