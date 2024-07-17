@@ -8,12 +8,6 @@
 #include <vector>
 #include <string>
 
-inline Vector3d randomUnitVector()
-{
-    Vector3d vec = {static_cast<double>(rand()) / RAND_MAX, static_cast<double>(rand()) / RAND_MAX, static_cast<double>(rand()) / RAND_MAX};
-    return vec.normalized();
-}
-
 int main(int argc, char *argv[])
 {
     // Check if given correct number of arguments
@@ -65,7 +59,7 @@ int main(int argc, char *argv[])
             for (int k = 0; k < cubic_sizes[2]; ++k)
             {
                 Vector3d pos = {i * d, j * d, k * d};
-                pos += d * randomUnitVector() * 0.5;  // add randomness in postion by 50%
+                pos += d * randomUnitVector() * 0.5; // add randomness in postion by 50%
                 Vector3d vel = Vector3d::Zero();
                 container.addParticle("carbon_" + std::to_string(c), "C0", pos, vel);
                 c++;
@@ -78,8 +72,10 @@ int main(int argc, char *argv[])
     size_t n = container.size();
     for (int step = 0; step < steps; step++)
     {
+        // Open position file to record all the positions in previous step
         std::ofstream pos_file(cwd / ("equilibration/positions/" + std::to_string(step) + ".pos"));
-        double total_potential_energy = 0; // Collect Lennard-Jones potential energy before equilibrate step
+        // Lennard-Jones potential energy in previous step
+        double total_potential_energy = 0;
         for (size_t i = 0; i < n; i++)
         {
             std::string type_i = container.getType(i);
@@ -101,8 +97,9 @@ int main(int argc, char *argv[])
         }
         // Apply the postion change to all particles
         container.applyPositionChangeAll();
+        // Calculate mean potential (total potential per particle)
         double mean_potential_energy = total_potential_energy / n;
-        // Write to output file
+        // Write mean potential to potential file
         pot_file
             << mean_potential_energy << "\n";
         printf("Mean potential energy = %f\n", mean_potential_energy);
@@ -110,5 +107,15 @@ int main(int argc, char *argv[])
         pos_file.close();
     }
     pot_file.close();
+
+    // Write final positions file
+    std::ofstream pos_file(cwd / "equilibration/positions/final.pos");
+    for (size_t i = 0; i < n; i++)
+    {
+        Vector3d r_i = container.getPosition(i);
+        pos_file << r_i[0] << " " << r_i[1] << " " << r_i[2] << "\n";
+    }
+    pos_file.close();
+
     return 0;
 }
