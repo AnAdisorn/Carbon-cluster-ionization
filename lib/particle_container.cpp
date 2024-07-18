@@ -89,12 +89,12 @@ Vector3d ParticleContainer::getPosition(size_t i) const
 
 void ParticleContainer::setPosition(size_t i, const Vector3d &x)
 {
-    particles_[i].v = x;
+    particles_[i].x = x;
 }
 
 void ParticleContainer::addPosition(size_t i, const Vector3d &x)
 {
-    particles_[i].v += x;
+    particles_[i].x += x;
 }
 
 void ParticleContainer::addPositionChange(const size_t i, const Vector3d &dx)
