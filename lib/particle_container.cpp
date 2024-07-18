@@ -1,11 +1,5 @@
 #include "particle_container.h"
 
-void Particle::applyPositionChange()
-{
-    x += dx;
-    dx.setZero();
-}
-
 std::string ParticleContainer::getName(size_t i) const
 {
     return particles_[i].name;
@@ -104,7 +98,8 @@ void ParticleContainer::addPositionChange(const size_t i, const Vector3d &dx)
 
 void ParticleContainer::applyPositionChange(const size_t i)
 {
-    particles_[i].applyPositionChange();
+    particles_[i].x += particles_[i].dx;
+    particles_[i].dx.setZero();
 }
 
 void ParticleContainer::applyPositionChangeAll()
@@ -113,6 +108,22 @@ void ParticleContainer::applyPositionChangeAll()
     {
         applyPositionChange(i);
     }
+}
+
+void ParticleContainer::addFields(size_t i, Vector3d &e, Vector3d &b)
+{
+    particles_[i].e += e;
+    particles_[i].b += b;
+}
+
+std::array<Vector3d, 2> ParticleContainer::getFields(size_t i)
+{
+    // Copy fields
+    std::array<Vector3d, 2> fields = {particles_[i].e, particles_[i].b};
+    // Reset fields to zero
+    particles_[i].e.setZero();
+    particles_[i].b.setZero();
+    return fields;
 }
 
 void ParticleContainer::addParticle(std::string name, std::string type, const Vector3d &x, const Vector3d &v)

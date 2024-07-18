@@ -1,8 +1,8 @@
 #include "particle_interactions.h"
 
-double calculateLJPotential(const std::string type1, const std::string type2, const Eigen::Vector3d &r1, const Eigen::Vector3d &r2)
+double calculateLJPotential(const std::string type1, const std::string type2, const Vector3d &r1, const Vector3d &r2)
 {
-    Eigen::Vector3d r21 = r2 - r1;
+    Vector3d r21 = r2 - r1;
     double r21_norm = r21.norm();
 
     std::pair<std::string, std::string> pair = createPair(type1, type2);
@@ -15,7 +15,7 @@ double calculateLJPotential(const std::string type1, const std::string type2, co
 
 Vector3d calculateLJForce(const std::string type1, const std::string type2, const Vector3d &r1, const Vector3d &r2)
 {
-    Eigen::Vector3d r21 = r2 - r1;
+    Vector3d r21 = r2 - r1;
     double r21_norm = r21.norm();
     r21.normalized();
 

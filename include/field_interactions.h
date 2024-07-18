@@ -36,15 +36,18 @@ inline Vector3d updateHalfPosition(const Vector3d &x, const Vector3d &v, double 
 }
 
 // Calculate new velocity from Electromagnetic field with Boris method
-Vector3d updateVelocityBoris(const std::string type, const Vector3d &v, const Vector3d &E, const Vector3d &B, double dt);
+Vector3d updateVelocityBoris(const std::string type, const Vector3d &v, const Vector3d &e, const Vector3d &b, double dt);
 
 // Calculate new velocity from Electromagnetic field with Vay method
-Vector3d updateVelocityVay(const std::string type, const Vector3d &v, const Vector3d &E, const Vector3d &B, double dt);
+Vector3d updateVelocityVay(const std::string type, const Vector3d &v, const Vector3d &e, const Vector3d &b, double dt);
 
 // Calculate new velocity from Electromagnetic field with Higuera-Cary method
-Vector3d updateVelocityHC(const std::string type, const Vector3d &v, const Vector3d &E, const Vector3d &B, double dt);
+Vector3d updateVelocityHC(const std::string type, const Vector3d &v, const Vector3d &e, const Vector3d &b, double dt);
 
 // Calculate ionisation rate
 double ionisationRate(const std::string type, double f);
+
+// Calculate field values (electric and magnetic) between two particles
+std::array<Vector3d, 4> calculatePairFields(const std::string type1, const std::string type2, const Vector3d &r1, const Vector3d &r2, const Vector3d &v1, const Vector3d &v2);
 
 #endif /* end of include guard: FIELD_INTERACTIONS_H */

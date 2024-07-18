@@ -6,18 +6,16 @@
 #include <vector>
 
 // Class to represent a particle
-class Particle
+struct Particle
 {
-public:
     std::string name;               // Name of the particle
     std::string type;               // Type of the particle
     Vector3d x = Vector3d::Zero();  // Position (default to zero)
     Vector3d dx = Vector3d::Zero(); // Accumulated change of position to be applied
     Vector3d v = Vector3d::Zero();  // Velocity (default to zero)
     Vector3d a = Vector3d::Zero();  // Acceleration (default to zero)
-
-    // Apply the accumulated change of position (dx) to position (x), after that reset the accumulated value (dx)
-    void applyPositionChange();
+    Vector3d e = Vector3d::Zero();  // Electric field (default to zero)
+    Vector3d b = Vector3d::Zero();  // Mlectric field (default to zero)
 };
 
 // Class to represent a container of particles
@@ -86,6 +84,12 @@ public:
 
     // Appply the accumulated position change of all particle to position
     void applyPositionChangeAll();
+
+    // Adding field values (electric and magnetic) to particle
+    void addFields(size_t i, Vector3d& e, Vector3d &b);
+
+    // Get field values (electric and magnetic) from particle
+    std::array<Vector3d, 2> getFields(size_t i);
 
     // Add a new particle to the container
     void addParticle(std::string name, std::string type, const Vector3d &v, const Vector3d &x);

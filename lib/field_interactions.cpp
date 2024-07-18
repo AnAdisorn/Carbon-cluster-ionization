@@ -75,3 +75,23 @@ double ionisationRate(const std::string type, double f)
 
     return cnl_sqr * sqrt(6 / M_PI) * flm * ei * pow(2 * pow(2 * ei, 1.5) / f, 2 * n_star - abs(m) - 1.5) * exp(-2 * pow(2 * ei, 1.5) / (3 * f));
 }
+
+std::array<Vector3d, 4> calculatePairFields(const std::string type1, const std::string type2, const Vector3d &r1, const Vector3d &r2, const Vector3d &v1, const Vector3d &v2)
+{
+    Vector3d e1, e2, b1, b2;
+
+    const double q1 = ParticleParametersMap.at(type1).kQ;
+    const double q2 = ParticleParametersMap.at(type2).kQ;
+    Vector3d r21 = r2 - r1;
+    Vector3d r_inverse_2 = r21.normalized() / pow(r21.norm(), 2);
+
+    // Coulomb law
+    e1 = q2 * (-r_inverse_2);
+    e2 = q1 * r_inverse_2;
+
+    // Biot-Savart law
+    b1 = 1 / (c * c) * q2 * v2.cross(-r_inverse_2);
+    b2 = 1 / (c * c) * q1 * v1.cross(r_inverse_2);
+
+    return {e1, e2, b1, b2};
+}

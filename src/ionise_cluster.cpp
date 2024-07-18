@@ -195,13 +195,14 @@ int main(int argc, char *argv[])
         // Get number of particles to loop through
         n_particle = container.size();
         printf("step = %i, n_particle = %zu\n", step, n_particle);
+
+        // Half position update
         for (size_t i = 0; i < n_particle; i++)
         {
             std::string type = container.getType(i);
+            std::string type_prefix = type.substr(0, 1);
             Vector3d r = container.getPosition(i);
             Vector3d v = container.getVelocity(i);
-            // Get type substr
-            std::string type_prefix = type.substr(0, 1);
             // Write position and velocity to file
             if (type_prefix.compare("C") == 0)
             {
@@ -219,16 +220,52 @@ int main(int argc, char *argv[])
                 printf("Found particle with unrecognised prefix: %s", type.c_str());
                 return -1;
             }
-
-            // Solving for new position and velocity
             r = updateHalfPosition(r, v, dt);
+            container.setPosition(i, r);
+        }
 
+        // Calculate field
+        for (size_t i = 0; i < n_particle; i++)
+        {
+            std::string type_i = container.getType(i);
+            std::string type_prefix_i = type_i.substr(0, 1);
+            Vector3d r_i = container.getPosition(i);
+            Vector3d v_i = container.getVelocity(i);
+
+            // Calculate E/B-field from laser pulse
             Vector3d e = electricField(e0, w, period, phi, r[2], t_start + step * dt);
             Vector3d b = n.cross(e) / c;
-            v = updateVelocity(type, v, e, b, dt);
+            container.addFields(i, e, b);
 
-            r = updateHalfPosition(r, v, dt);
+            // Calculate E/B-field between electrons
+            if (type_prefix_i.compare("e") == 0)
+            {
+                for (size_t j = i + 1; j < n_particle; i++)
+                {
+                    std::string type_j = container.getType(j);
+                    std::string type_prefix_j = type_i.substr(0, 1);
+                    if (type_prefix_j.compare("e") == 0)
+                    {
+                        Vector3d r_j = container.getPosition(j);
+                        Vector3d v_j = container.getVelocity(j);
 
+                        auto fields = calculatePairFields(type_i, type_j, r_i, r_j, v_i, v_j);
+                        container.addFields(i, fields[0], fields[2]);
+                        container.addFields(j, fields[1], fields[3]);
+                    }
+                }
+            }
+        }
+        // Velocity/Position/Ionisation updates
+        for (size_t i = 0; i < n_particle; i++)
+        {
+            std::string type = container.getType(i);
+            std::string type_prefix = type.substr(0, 1);
+            Vector3d r = container.getPosition(i);
+            Vector3d v = container.getVelocity(i);
+
+            auto fields = container.getFields(i);
+            v = updateVelocity(type, v, fields[0], fields[1], dt);
             // Update particles attribute
             container.setPosition(i, r);
             container.setVelocity(i, v);
@@ -236,7 +273,7 @@ int main(int argc, char *argv[])
             // Ionisation
             if (!(IonisationParametersMap.find(type) == IonisationParametersMap.end())) // ensure if polarizable according to ionisationParametersMap
             {
-                if (randomChance(1 - exp(-ionisationRate(type, e.norm()) * dt)))
+                if (randomChance(1 - exp(-ionisationRate(type, fields[0].norm()) * dt)))
                 {
                     // Add electron with same position and velocity
                     container.addParticle("electron_" + std::to_string(n_elctron), "e-", r, v);
@@ -246,6 +283,7 @@ int main(int argc, char *argv[])
                 }
             }
         }
+
         carbon_pos_file.close();
         carbon_vel_file.close();
         carbon_ion_file.close();
