@@ -6,8 +6,7 @@ void Particle::applyPositionChange()
     dx.setZero();
 }
 
-const std::string
-ParticleContainer::getName(size_t i) const
+std::string ParticleContainer::getName(size_t i) const
 {
     return particles_[i].name;
 }
@@ -17,7 +16,7 @@ void ParticleContainer::setName(size_t i, const std::string &name)
     particles_[i].name = name;
 }
 
-const std::string ParticleContainer::getType(size_t i) const
+std::string ParticleContainer::getType(size_t i) const
 {
     return particles_[i].type;
 }
@@ -27,7 +26,7 @@ void ParticleContainer::setType(size_t i, const std::string &type)
     particles_[i].type = type;
 }
 
-const Vector3d ParticleContainer::getAcceleration(size_t i) const
+Vector3d ParticleContainer::getAcceleration(size_t i) const
 {
     return particles_[i].a;
 }
@@ -55,7 +54,7 @@ void ParticleContainer::addAcceleration(size_t i, const Vector3d &a)
     particles_[i].a += a;
 }
 
-const Vector3d ParticleContainer::getVelocity(size_t i) const
+Vector3d ParticleContainer::getVelocity(size_t i) const
 {
     return particles_[i].v;
 }
@@ -83,7 +82,7 @@ void ParticleContainer::addVelocity(size_t i, const Vector3d &v)
     particles_[i].v += v;
 }
 
-const Vector3d ParticleContainer::getPosition(size_t i) const
+Vector3d ParticleContainer::getPosition(size_t i) const
 {
     return particles_[i].x;
 }

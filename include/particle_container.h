@@ -28,19 +28,19 @@ public:
     // bool checkIndex(const int i) const;
 
     // Get the name of a particle at a specific index
-    const std::string getName(const size_t i) const;
+    std::string getName(const size_t i) const;
 
     // Set the name of a particle at a specific index
     void setName(const size_t i, const std::string &name);
 
     // Get the type of a particle at a specific index
-    const std::string getType(const size_t i) const;
+    std::string getType(const size_t i) const;
 
     // Set the type of a particle at a specific index
     void setType(const size_t i, const std::string &type);
 
     // Get the acceleration of a particle at a specific index
-    const Vector3d getAcceleration(const size_t i) const;
+    Vector3d getAcceleration(const size_t i) const;
 
     // Set the acceleration of a particle at a specific index
     void setAcceleration(const size_t i, const Vector3d &a);
@@ -55,7 +55,7 @@ public:
     void addAcceleration(const size_t i, const Vector3d &a);
 
     // Get the velocity of a particle at a specific index
-    const Vector3d getVelocity(const size_t i) const;
+    Vector3d getVelocity(const size_t i) const;
 
     // Set the velocity of a particle at a specific index
     void setVelocity(const size_t i, const Vector3d &v);
@@ -70,7 +70,7 @@ public:
     void addVelocity(const size_t i, const Vector3d &v);
 
     // Get the position of a particle at a specific index
-    const Vector3d getPosition(const size_t i) const;
+    Vector3d getPosition(const size_t i) const;
 
     // Set the position of a particle at a specific index
     void setPosition(const size_t i, const Vector3d &x);
