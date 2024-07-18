@@ -11,14 +11,15 @@ namespace filesys = std::filesystem;
 
 int main(int argc, char *argv[])
 {
+    // Seed the random number generator (optional for better randomness)
+    srand(0);
+
     // Check if given correct number of arguments
     if (!(argc - 1 == 5 || argc - 1 == 6))
     {
         printf("Requires 5 or 6 inputs but %i were given\n", argc - 1);
         return -1;
     }
-    // Seed the random number generator (optional for better randomness)
-    srand(0);
 
     std::array<int, 3> grid_sized; // Size of grid sides
     double d = 2.91;               // Spacing (default or from argument)
@@ -75,7 +76,7 @@ int main(int argc, char *argv[])
     for (int step = 0; step < steps; step++)
     {
         // Open position file to record all the positions in previous step
-        std::ofstream pos_file(cwd / ("equilibration/positions/" + std::to_string(step) + ".pos"));
+        std::ofstream pos_file(positions_dir / (std::to_string(step) + ".pos"));
         // Lennard-Jones potential energy in previous step
         double total_potential_energy = 0;
         for (size_t i = 0; i < n; i++)
