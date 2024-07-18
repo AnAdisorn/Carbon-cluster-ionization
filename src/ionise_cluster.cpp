@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
             // Ionisation
             if (!(IonisationParametersMap.find(type) == IonisationParametersMap.end())) // ensure if polarizable according to ionisationParametersMap
             {
-                if (randomChance(ionisationRate(type, e.norm()) * dt))
+                if (randomChance(1 - exp(-ionisationRate(type, e.norm()) * dt)))
                 {
                     // Add electron with same position and velocity
                     container.addParticle("electron_" + std::to_string(n_elctron), "e-", r, v);
