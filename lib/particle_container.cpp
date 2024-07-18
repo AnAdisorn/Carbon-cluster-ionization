@@ -27,12 +27,12 @@ void ParticleContainer::setType(size_t i, const std::string &type)
     particles_[i].type = type;
 }
 
-const Eigen::Vector3d ParticleContainer::getAcceleration(size_t i) const
+const Vector3d ParticleContainer::getAcceleration(size_t i) const
 {
     return particles_[i].a;
 }
 
-void ParticleContainer::setAcceleration(size_t i, const Eigen::Vector3d &a)
+void ParticleContainer::setAcceleration(size_t i, const Vector3d &a)
 {
     particles_[i].a = a;
 }
@@ -50,17 +50,17 @@ void ParticleContainer::resetAllAcceleration()
     }
 }
 
-void ParticleContainer::addAcceleration(size_t i, const Eigen::Vector3d &a)
+void ParticleContainer::addAcceleration(size_t i, const Vector3d &a)
 {
     particles_[i].a += a;
 }
 
-const Eigen::Vector3d ParticleContainer::getVelocity(size_t i) const
+const Vector3d ParticleContainer::getVelocity(size_t i) const
 {
     return particles_[i].v;
 }
 
-void ParticleContainer::setVelocity(size_t i, const Eigen::Vector3d &v)
+void ParticleContainer::setVelocity(size_t i, const Vector3d &v)
 {
     particles_[i].v = v;
 }
@@ -78,22 +78,22 @@ void ParticleContainer::resetAllVelocity()
     }
 }
 
-void ParticleContainer::addVelocity(size_t i, const Eigen::Vector3d &v)
+void ParticleContainer::addVelocity(size_t i, const Vector3d &v)
 {
     particles_[i].v += v;
 }
 
-const Eigen::Vector3d ParticleContainer::getPosition(size_t i) const
+const Vector3d ParticleContainer::getPosition(size_t i) const
 {
     return particles_[i].x;
 }
 
-void ParticleContainer::setPosition(size_t i, const Eigen::Vector3d &x)
+void ParticleContainer::setPosition(size_t i, const Vector3d &x)
 {
     particles_[i].v = x;
 }
 
-void ParticleContainer::addPosition(size_t i, const Eigen::Vector3d &x)
+void ParticleContainer::addPosition(size_t i, const Vector3d &x)
 {
     particles_[i].v += x;
 }
@@ -116,7 +116,7 @@ void ParticleContainer::applyPositionChangeAll()
     }
 }
 
-void ParticleContainer::addParticle(std::string name, std::string type, const Eigen::Vector3d &x, const Eigen::Vector3d &v)
+void ParticleContainer::addParticle(std::string name, std::string type, const Vector3d &x, const Vector3d &v)
 {
     Particle p;
     p.name = name;
