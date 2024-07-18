@@ -114,8 +114,8 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    Vector3d (*updateVelocity)(const std::string, const Vector3d &, const Vector3d &, const Vector3d &, double); // Function to calculate new velocity
-
+    // Create updateVelocity function pointer
+    Vector3d (*updateVelocity)(const std::string, const Vector3d &, const Vector3d &, const Vector3d &, double);
     if (method.compare("Boris") == 0)
     {
         updateVelocity = updateVelocityBoris;
