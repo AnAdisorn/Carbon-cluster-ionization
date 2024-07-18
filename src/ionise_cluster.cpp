@@ -200,8 +200,6 @@ int main(int argc, char *argv[])
             std::string type = container.getType(i);
             Vector3d r = container.getPosition(i);
             Vector3d v = container.getVelocity(i);
-            Vector3d e = electricField(e0, w, period, phi, r[2], t_start + step * dt);
-            Vector3d b = n.cross(e) / c;
             // Get type substr
             std::string type_prefix = type.substr(0, 1);
             // Write position and velocity to file
@@ -221,10 +219,16 @@ int main(int argc, char *argv[])
                 printf("Found particle with unrecognised prefix: %s", type.c_str());
                 return -1;
             }
+
             // Solving for new position and velocity
             r = updateHalfPosition(r, v, dt);
+
+            Vector3d e = electricField(e0, w, period, phi, r[2], t_start + step * dt);
+            Vector3d b = n.cross(e) / c;
             v = updateVelocity(type, v, e, b, dt);
+
             r = updateHalfPosition(r, v, dt);
+
             // Update particles attribute
             container.setPosition(i, r);
             container.setVelocity(i, v);
