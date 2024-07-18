@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
             Vector3d v_i = container.getVelocity(i);
 
             // Calculate E/B-field from laser pulse
-            Vector3d e = electricField(e0, w, period, phi, r[2], t_start + step * dt);
+            Vector3d e = electricField(e0, w, period, phi, r_i[2], t_start + step * dt);
             Vector3d b = n.cross(e) / c;
             container.addFields(i, e, b);
 
