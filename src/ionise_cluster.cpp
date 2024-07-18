@@ -143,8 +143,8 @@ int main(int argc, char *argv[])
         return -1;
     }
     // Create directories for postions and velocity
-    auto carbon_dir = cwd / ("ionisation/" + method + "/carbon");
-    auto electron_dir = cwd / ("ionisation/" + method + "/electron");
+    auto carbon_dir = cwd / ("ionisation/" + pol + "_" + method + "/carbon");
+    auto electron_dir = cwd / ("ionisation/" + pol + "_" + method + "/electron");
     filesys::create_directories(carbon_dir);
     filesys::create_directory(electron_dir);
 
