@@ -249,5 +249,45 @@ int main(int argc, char *argv[])
         electron_vel_file.close();
     }
 
+    // Writing final result
+    // Open file to save positions and velocities
+    std::ofstream carbon_pos_file(carbon_dir / "final.pos");
+    std::ofstream carbon_vel_file(carbon_dir / "final.vel");
+    std::ofstream carbon_ion_file(carbon_dir / "final.ion");
+    std::ofstream electron_pos_file(electron_dir / "final.pos");
+    std::ofstream electron_vel_file(electron_dir / "final.vel");
+    // Get number of particles to loop through
+    n_particle = container.size();
+    for (size_t i = 0; i < n_particle; i++)
+    {
+        std::string type = container.getType(i);
+        Vector3d r = container.getPosition(i);
+        Vector3d v = container.getVelocity(i);
+        // Get type substr
+        std::string type_prefix = type.substr(0, 1);
+        // Write position and velocity to file
+        if (type_prefix.compare("C") == 0)
+        {
+            carbon_pos_file << r[0] << " " << r[1] << " " << r[2] << "\n";
+            carbon_vel_file << v[0] << " " << v[1] << " " << v[2] << "\n";
+            carbon_ion_file << type.substr(1, 2) << "\n";
+        }
+        else if (type_prefix.compare("e") == 0)
+        {
+            electron_pos_file << r[0] << " " << r[1] << " " << r[2] << "\n";
+            electron_vel_file << v[0] << " " << v[1] << " " << v[2] << "\n";
+        }
+        else
+        {
+            printf("Found particle with unrecognised prefix: %s", type.c_str());
+            return -1;
+        }
+    }
+    carbon_pos_file.close();
+    carbon_vel_file.close();
+    carbon_ion_file.close();
+    electron_pos_file.close();
+    electron_vel_file.close();
+
     return 0;
 }
