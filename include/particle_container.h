@@ -86,7 +86,7 @@ public:
     void applyPositionChangeAll();
 
     // Adding field values (electric and magnetic) to particle
-    void addFields(size_t i, Vector3d& e, Vector3d &b);
+    void addFields(size_t i, const Vector3d &e, const Vector3d &b);
 
     // Get field values (electric and magnetic) from particle
     std::array<Vector3d, 2> getFields(size_t i);

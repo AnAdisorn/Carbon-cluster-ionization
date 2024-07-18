@@ -237,14 +237,13 @@ int main(int argc, char *argv[])
             Vector3d b = n.cross(e) / c;
             container.addFields(i, e, b);
 
-            // Calculate E/B-field between electrons
-            if (type_prefix_i.compare("e") == 0)
+            // Calculate E/B-field between the same type, i.e. carbon-carbon, electron-electron
             {
-                for (size_t j = i + 1; j < n_particle; i++)
+                for (size_t j = i + 1; j < n_particle; j++)
                 {
                     std::string type_j = container.getType(j);
-                    std::string type_prefix_j = type_i.substr(0, 1);
-                    if (type_prefix_j.compare("e") == 0)
+                    std::string type_prefix_j = type_j.substr(0, 1);
+                    if (type_prefix_j.compare(type_prefix_i) == 0) // check if the second particle is the same kind
                     {
                         Vector3d r_j = container.getPosition(j);
                         Vector3d v_j = container.getVelocity(j);
@@ -265,7 +264,9 @@ int main(int argc, char *argv[])
             Vector3d v = container.getVelocity(i);
 
             auto fields = container.getFields(i);
+            // Calculate new position and velocity
             v = updateVelocity(type, v, fields[0], fields[1], dt);
+            r = updateHalfPosition(r, v, dt);
             // Update particles attribute
             container.setPosition(i, r);
             container.setVelocity(i, v);
@@ -273,7 +274,8 @@ int main(int argc, char *argv[])
             // Ionisation
             if (!(IonisationParametersMap.find(type) == IonisationParametersMap.end())) // ensure if polarizable according to ionisationParametersMap
             {
-                if (randomChance(1 - exp(-ionisationRate(type, fields[0].norm()) * dt)))
+                Vector3d e = electricField(e0, w, period, phi, r[2], t_start + step * dt);
+                if (randomChance(1 - exp(-ionisationRate(type, e.norm()) * dt)))
                 {
                     // Add electron with same position and velocity
                     container.addParticle("electron_" + std::to_string(n_elctron), "e-", r, v);

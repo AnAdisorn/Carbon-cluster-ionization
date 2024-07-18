@@ -110,7 +110,7 @@ void ParticleContainer::applyPositionChangeAll()
     }
 }
 
-void ParticleContainer::addFields(size_t i, Vector3d &e, Vector3d &b)
+void ParticleContainer::addFields(size_t i, const Vector3d &e, const Vector3d &b)
 {
     particles_[i].e += e;
     particles_[i].b += b;

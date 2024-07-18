@@ -86,8 +86,26 @@ std::array<Vector3d, 4> calculatePairFields(const std::string type1, const std::
     Vector3d r_inverse_2 = r21.normalized() / pow(r21.norm(), 2);
 
     // Coulomb law
-    e1 = q2 * (-r_inverse_2);
-    e2 = q1 * r_inverse_2;
+    // if (q2 > 0 && !(IonisationParametersMap.find(lowerType(type2)) == IonisationParametersMap.end()))
+    // {
+    //     std::string lower_type = lowerType(type2);
+    //     double r_soft = pow(q1 * q2, 2) / IonisationParametersMap[lower_type].kEi;
+    //     e1 = q2 * pow(pow(r21.norm(), 2) + r_soft, 1.5) * (-r21);
+    // }
+    // else
+    {
+        e1 = q2 * (-r_inverse_2);
+    }
+
+    // if (q1 > 0 && !(IonisationParametersMap.find(lowerType(type1)) == IonisationParametersMap.end()))
+    // {
+    //     double r_soft = pow(q1 * q2, 2) / IonisationParametersMap[type1].kEi;
+    //     e2 = q1 * pow(pow(r21.norm(), 2) + r_soft, 1.5) * r21;
+    // }
+    // else
+    {
+        e2 = q1 * r_inverse_2;
+    }
 
     // Biot-Savart law
     b1 = 1 / (c * c) * q2 * v2.cross(-r_inverse_2);

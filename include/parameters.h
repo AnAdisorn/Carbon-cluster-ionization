@@ -70,4 +70,11 @@ inline std::pair<std::string, std::string> createPair(std::string str1, std::str
     }
 }
 
+inline std::string lowerType(std::string type)
+{
+    std::string type_prefix = type.substr(0, 1);
+    int type_suffix = std::stoi(type.substr(1, 2));
+
+    return type_prefix + std::to_string(type_suffix - 1);
+}
 #endif /* end of include guard: PARAMETERS_H */
