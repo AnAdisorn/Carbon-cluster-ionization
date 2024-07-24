@@ -77,4 +77,19 @@ inline std::string lowerType(std::string type)
 
     return type_prefix + std::to_string(type_suffix - 1);
 }
+
+inline std::string upperType(std::string type)
+{
+    std::string type_prefix = type.substr(0, 1);
+    int type_suffix = std::stoi(type.substr(1, 2));
+
+    return type_prefix + std::to_string(type_suffix + 1);
+}
+
+inline double bohrRadius(std::string type)
+{
+    IonisationParameters &params = IonisationParametersMap[type];
+    return pow(params.kN,2) / params.kZ;
+}
+
 #endif /* end of include guard: PARAMETERS_H */

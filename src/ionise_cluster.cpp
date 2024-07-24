@@ -12,65 +12,44 @@ using namespace std::complex_literals; // Allow to use i as complex number, i.e.
 namespace filesys = std::filesystem;
 typedef std::complex<double> cdouble;
 
-// Vector3cd vectorPotential(const double e0, const double w, const double b, const Vector3d &n, const Vector3d &eps, const Vector3cd &r, const cdouble t)
-// {
-//     const cdouble kR_dot_n = r.dot(n);                        // r . n
-//     const double kB_r_n_norm_sqr = pow(abs(b + kR_dot_n), 2); // |b + r . n| ^ 2
-//     const Vector3cd kR_cross_n = r.cross(n);                  // r x n
-
-//     const cdouble kA0 = c * e0 * pow(b, 2) / (w * kB_r_n_norm_sqr); // Magnitude of vector potential pulse
-
-//     const Vector3cd kTemp_vec = w / c * r.dot(eps.cross(n)) * kR_cross_n / kB_r_n_norm_sqr; // Second term in vector of vector potential pulse
-//     const Vector3cd kVec_real = eps + kTemp_vec * b;                                        // Vector of vector potential pulse
-//     const Vector3cd kVec_imag = -kTemp_vec * kR_dot_n;                                      // Vector of vector potential pulse
-
-//     const cdouble kTemp_phase = w * (t - kR_dot_n / c); // From exp(-i * kTemp_phase) of the first expotnential of vector potential pulse
-//     const cdouble kPhase_real = cos(kTemp_phase);       // First expotnential of vector potential pulse
-//     const cdouble kPhase_imag = -sin(kTemp_phase);      // First expotnential of vector potential pulse
-
-//     const double kTemp_real = -w * pow(kR_cross_n.norm(), 2) / (2 * c * kB_r_n_norm_sqr); // From exp(kTemp_real * (b - i * r . n)) of the second expotnential of vector potential pulse
-//     const double kReal_exp = exp(kTemp_real * b);
-//     const cdouble kTemp_theta = kTemp_real * kR_dot_n;
-//     const cdouble kEnvelope_real = kReal_exp * cos(kTemp_theta);  // Second expotnential of vector potential pulse
-//     const cdouble kEnvelope_imag = -kReal_exp * sin(kTemp_theta); // Second expotnential of vector potential pulse
-
-//     return kA0 * (kVec_real * kPhase_real * kEnvelope_real - kVec_real * kPhase_imag * kEnvelope_imag - kVec_imag * kPhase_real * kEnvelope_imag - kVec_imag * kPhase_imag * kEnvelope_real);
-// }
-
-// Vector3d electricField(const double e0, const double w, const double b, const Vector3d &n, const Vector3d &eps, const Vector3d &r, const double t)
-// {
-//     const double h = 1e-200;
-//     return (-vectorPotential(e0, w, b, n, eps, r, t + 1i * h)).imag() / h;
-// }
-
-// Vector3d magneticField(const double e0, const double w, const double b, const Vector3d &n, const Vector3d &eps, const Vector3d &r, const double t)
-// {
-//     const double h = 1e-200;
-
-//     const Vector3cd kA_dx = vectorPotential(e0, w, b, n, eps, r + Vector3cd{1i * h, 0, 0}, t); // A(r + i*h_x) / h
-//     const Vector3cd kA_dy = vectorPotential(e0, w, b, n, eps, r + Vector3cd{0, 1i * h, 0}, t); // A(r + i*h_y) / h
-//     const Vector3cd kA_dz = vectorPotential(e0, w, b, n, eps, r + Vector3cd{0, 0, 1i * h}, t); // A(r + i*h_z) / h
-
-//     double x, y, z; // Magnitic field in respective axis
-//     x = (kA_dy[2] - kA_dz[1]).imag() / h;
-//     y = (kA_dz[0] - kA_dx[2]).imag() / h;
-//     z = (kA_dx[1] - kA_dy[0]).imag() / h;
-
-//     return {x, y, z};
-// }
-
-// double b = std::stod(argv[3]);  // characheristic width of the pulse
-// Vector3d eps;
-// double b_mag = magneticField(e0, w, b, n, eps, Vector3d::Zero(), t_start + step * dt).norm();
-// double e_mag = electricField(e0, w, b, n, eps, Vector3d::Zero(), t_start + step * dt).norm();
-// printf("magnitude (t = %f) = %f\n", t_start + step * dt, e_mag/b_mag);
-
-Vector3d electricField(const double e0, const double w, const double period, const double phi, const double z, const double t)
+Vector3cd vectorPotential(const double e0, const double w, const double b, const Vector3d &n, const Vector3d &eps, const Vector3cd &r, const cdouble t)
 {
-    double mag = e0 * exp(-1.38 * pow(t / period, 2));
-    double phase = w * (t - z / c);
-    return {mag * cos(phase), mag * cos(phase + phi), 0};
+    const cdouble kR_dot_n = r.dot(n);        // r . n
+    const cdouble kB_r_n = b + 1i * kR_dot_n; // b + i r . n
+    const Vector3cd kR_cross_n = r.cross(n);  // r x n
+
+    cdouble a0 = c * e0 * pow(b, 2) / (w * pow(abs(kB_r_n), 2));                       // Magnitude of vector potential pulse
+    Vector3cd vec = eps + w / c * r.dot(eps.cross(n)) * kR_cross_n / kB_r_n;           // Vector term
+    cdouble exp1 = exp(-1i * w * (t - kR_dot_n / c));                                  // First exponential term
+    cdouble exp2 = exp(-w / (2 * c * (b + 1i * kR_dot_n)) * kR_cross_n.squaredNorm()); // Second exponential term
+
+    return a0 * vec * exp1 * exp2;
 }
+
+Vector3d electricField(const double e0, const double w, const double b, const Vector3d &n, const Vector3d &eps, const Vector3d &r, const double t)
+{
+    return -w * vectorPotential(e0, w, b, n, eps, r, t).imag();
+}
+
+Vector3d magneticField(const double e0, const double w, const double b, const Vector3d &n, const Vector3d &eps, const Vector3d &r, const double t)
+{
+    const double h = 1e-200;
+
+    const Vector3cd kA = vectorPotential(e0, w, b, n, eps, r, t);
+
+    Vector3cd dA_dx = (vectorPotential(e0, w, b, n, eps, r + Vector3d{h, 0, 0}, t) - kA) / h; // A(r + i*h_x) / h
+    Vector3cd dA_dy = (vectorPotential(e0, w, b, n, eps, r + Vector3d{0, h, 0}, t) - kA) / h; // A(r + i*h_y) / h
+    Vector3cd dA_dz = (vectorPotential(e0, w, b, n, eps, r + Vector3d{0, 0, h}, t) - kA) / h; // A(r + i*h_z) / h
+
+    double x, y, z; // Magnitic field in respective axis
+    x = (dA_dy[2] - dA_dz[1]).real();
+    y = (dA_dz[0] - dA_dx[2]).real();
+    z = (dA_dx[1] - dA_dy[0]).real();
+
+    return {x, y, z};
+}
+
+// printf("magnitude (t = %f) = %f\n", t_start + step * dt, e_mag/b_mag);
 
 inline bool randomChance(double prob)
 {
@@ -90,23 +69,22 @@ int main(int argc, char *argv[])
     }
 
     // Process input arguments
-    const double e0 = std::stod(argv[1]);     // Electric field amplitude
-    const double w = std::stod(argv[2]);      // Laser carrier frequency
-    const double period = std::stod(argv[3]); // Time period of pulse envelope
-    const double dt = std::stod(argv[4]);     // Time step size
-    const std::string pol = argv[5];          // Polarisation
-    const std::string method = argv[6];       // Method for velocity update
-    double phi;                               // Phase difference between x/y-axis
-    const Vector3d n = {0, 0, 1};             // Direction of propagation (z-axis)
+    const double e0 = std::stod(argv[1]); // Electric field amplitude
+    const double w = std::stod(argv[2]);  // Laser carrier frequency
+    const double b = std::stod(argv[3]);  // Characheristic width of the pulse
+    const double dt = std::stod(argv[4]); // Time step size
+    const std::string pol = argv[5];      // Polarisation
+    const std::string method = argv[6];   // Method for velocity update
+
+    const Vector3d n = {0, 0, 1}; // Direction of propagation (z-axis)
+    Vector3d eps;                 // polarization of laser field
     if (pol.compare("linear") == 0)
     {
-        // eps = {1, 0, 0};
-        phi = 0;
+        eps = {1, 0, 0};
     }
     else if (pol.compare("circular") == 0)
     {
-        // eps = {1, 1, 0};
-        phi = M_PI / 2;
+        eps = {1, 1, 0};
     }
     else
     {
@@ -179,8 +157,7 @@ int main(int argc, char *argv[])
 
     // Simulate ionisation by laser pulse
     size_t n_elctron = 0;
-    int steps = 10 * period / dt;
-    double t_start = -steps * dt / 2;
+    int steps = 10 * (2 * M_PI / w) / dt;
     printf("Number of steps = %i\n", steps);
 
     printf("Start ionisation simulations\n");
@@ -233,9 +210,9 @@ int main(int argc, char *argv[])
             Vector3d v_i = container.getVelocity(i);
 
             // Calculate E/B-field from laser pulse
-            Vector3d e = electricField(e0, w, period, phi, r_i[2], t_start + step * dt);
-            Vector3d b = n.cross(e) / c;
-            container.addFields(i, e, b);
+            Vector3d e_field = electricField(e0, w, b, n, eps, r_i, step * dt);
+            Vector3d b_field = magneticField(e0, w, b, n, eps, r_i, step * dt);
+            container.addFields(i, e_field, b_field);
 
             // Calculate E/B-field between the same type, i.e. carbon-carbon, electron-electron
             {
@@ -243,7 +220,7 @@ int main(int argc, char *argv[])
                 {
                     std::string type_j = container.getType(j);
                     std::string type_prefix_j = type_j.substr(0, 1);
-                    if (type_prefix_j.compare(type_prefix_i) == 0) // check if the second particle is the same kind
+                    // if (type_prefix_i.compare(type_prefix_j) == 0) // check if the second particle is the same kind
                     {
                         Vector3d r_j = container.getPosition(j);
                         Vector3d v_j = container.getVelocity(j);
@@ -274,14 +251,14 @@ int main(int argc, char *argv[])
             // Ionisation
             if (!(IonisationParametersMap.find(type) == IonisationParametersMap.end())) // ensure if polarizable according to ionisationParametersMap
             {
-                Vector3d e = electricField(e0, w, period, phi, r[2], t_start + step * dt);
-                if (randomChance(1 - exp(-ionisationRate(type, e.norm()) * dt)))
+                Vector3d e_field = electricField(e0, w, b, n, eps, r, step * dt);
+                if (randomChance(1 - exp(-ionisationRate(type, e_field.norm()) * dt)))
                 {
-                    // Add electron with same position and velocity
-                    container.addParticle("electron_" + std::to_string(n_elctron), "e-", r, v);
+                    // Add electron with random position and velocity
+                    container.addParticle("electron_" + std::to_string(n_elctron), "e-", r + bohrRadius(type) * randomUnitVector(), v);
                     n_elctron++;
                     // Change type of particle to the polarized one
-                    container.setType(i, type_prefix + std::to_string(std::stoi(type.substr(1, 2)) + 1));
+                    container.setType(i, upperType(type));
                 }
             }
         }
