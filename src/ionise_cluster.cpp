@@ -37,9 +37,9 @@ Vector3d magneticField(const double e0, const double w, const double b, const Ve
 
     const Vector3cd kA = vectorPotential(e0, w, b, n, eps, r, t);
 
-    Vector3cd dA_dx = (vectorPotential(e0, w, b, n, eps, r + Vector3d{h, 0, 0}, t) - kA) / h; // A(r + i*h_x) / h
-    Vector3cd dA_dy = (vectorPotential(e0, w, b, n, eps, r + Vector3d{0, h, 0}, t) - kA) / h; // A(r + i*h_y) / h
-    Vector3cd dA_dz = (vectorPotential(e0, w, b, n, eps, r + Vector3d{0, 0, h}, t) - kA) / h; // A(r + i*h_z) / h
+    Vector3cd dA_dx = (vectorPotential(e0, w, b, n, eps, r + Vector3d{h, 0, 0}, t) - kA) / h; // dA/dx
+    Vector3cd dA_dy = (vectorPotential(e0, w, b, n, eps, r + Vector3d{0, h, 0}, t) - kA) / h; // dA/dy
+    Vector3cd dA_dz = (vectorPotential(e0, w, b, n, eps, r + Vector3d{0, 0, h}, t) - kA) / h; // dA/dz
 
     double x, y, z; // Magnitic field in respective axis
     x = (dA_dy[2] - dA_dz[1]).real();
@@ -134,6 +134,7 @@ int main(int argc, char *argv[])
 
     // Load particle postions from equilibration
     size_t n_particle = 0; // number of particles
+    Vector3d sum_pos = Vector3d::Zero();
     std::string line;
     while (getline(pos_file, line))
     {
@@ -150,15 +151,26 @@ int main(int argc, char *argv[])
 
         Vector3d vel = Vector3d::Zero(); // init with zero velocity
         container.addParticle("carbon_" + std::to_string(n_particle), "C0", pos, vel);
+        sum_pos += pos;
         n_particle++;
     }
     pos_file.close();
+    // Central cluster in the middle
+    Vector3d mean_pos = sum_pos / n_particle;
+    for (size_t i = 0; i < n_particle; i++)
+    {
+        container.addPosition(i, -mean_pos);
+    }
     printf("Loaded %zu particles\n", n_particle);
 
     // Simulate ionisation by laser pulse
     size_t n_elctron = 0;
     int steps = 10 * (2 * M_PI / w) / dt;
-    printf("Number of steps = %i\n", steps);
+    printf("Number of steps = %i\nDo you want to run simulation? (y/n): ", steps);
+    char ans;
+    std::cin >> ans;
+    if (ans == 'n')
+        return 0;
 
     printf("Start ionisation simulations\n");
     for (int step = 0; step < steps; step++)
@@ -171,7 +183,7 @@ int main(int argc, char *argv[])
         std::ofstream electron_vel_file(electron_dir / (std::to_string(step) + ".vel"));
         // Get number of particles to loop through
         n_particle = container.size();
-        printf("step = %i, n_particle = %zu\n", step, n_particle);
+        std::cout << "\rstep = " << step << ", n_particle = " << n_particle << std::flush;
 
         // Half position update
         for (size_t i = 0; i < n_particle; i++)
@@ -214,21 +226,19 @@ int main(int argc, char *argv[])
             Vector3d b_field = magneticField(e0, w, b, n, eps, r_i, step * dt);
             container.addFields(i, e_field, b_field);
 
-            // Calculate E/B-field between the same type, i.e. carbon-carbon, electron-electron
+            // Calculate E/B-field between particles
+            for (size_t j = i + 1; j < n_particle; j++)
             {
-                for (size_t j = i + 1; j < n_particle; j++)
+                std::string type_j = container.getType(j);
+                std::string type_prefix_j = type_j.substr(0, 1);
+                // if (type_prefix_i.compare(type_prefix_j) == 0) // check if the second particle is the same kind
                 {
-                    std::string type_j = container.getType(j);
-                    std::string type_prefix_j = type_j.substr(0, 1);
-                    // if (type_prefix_i.compare(type_prefix_j) == 0) // check if the second particle is the same kind
-                    {
-                        Vector3d r_j = container.getPosition(j);
-                        Vector3d v_j = container.getVelocity(j);
+                    Vector3d r_j = container.getPosition(j);
+                    Vector3d v_j = container.getVelocity(j);
 
-                        auto fields = calculatePairFields(type_i, type_j, r_i, r_j, v_i, v_j);
-                        container.addFields(i, fields[0], fields[2]);
-                        container.addFields(j, fields[1], fields[3]);
-                    }
+                    auto fields = calculatePairFields(type_i, type_j, r_i, r_j, v_i, v_j);
+                    container.addFields(i, fields[0], fields[2]);
+                    container.addFields(j, fields[1], fields[3]);
                 }
             }
         }
@@ -300,7 +310,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            printf("Found particle with unrecognised prefix: %s", type.c_str());
+            printf("Found particle with unrecognisable prefix: %s", type.c_str());
             return -1;
         }
     }
