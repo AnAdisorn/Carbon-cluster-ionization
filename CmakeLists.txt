@@ -26,6 +26,7 @@ endif()
 add_library(particle_container lib/particle_container.cpp)
 add_library(particle_interactions STATIC lib/particle_interactions.cpp)
 add_library(field_interactions STATIC lib/field_interactions.cpp)
+add_library(laser_field STATIC lib/laser_field.cpp)
 add_library(parameters STATIC lib/parameters.cpp)
 
 target_include_directories(particle_container
@@ -37,6 +38,10 @@ target_include_directories(particle_interactions
        include
 )
 target_include_directories(field_interactions
+    PUBLIC 
+       include
+)
+target_include_directories(laser_field
     PUBLIC 
        include
 )
@@ -58,7 +63,7 @@ target_link_libraries(initialise_cluster
 add_executable(ionise_cluster src/ionise_cluster.cpp)
 target_link_libraries(ionise_cluster 
     PRIVATE 
-        particle_container field_interactions parameters
+        particle_container field_interactions laser_field parameters
 )
 
 ############################################################

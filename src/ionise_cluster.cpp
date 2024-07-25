@@ -1,5 +1,6 @@
 #include "particle_container.h"
 #include "field_interactions.h"
+#include "laser_field.h"
 #include "parameters.h"
 
 #include <string>
@@ -12,45 +13,6 @@ using namespace std::complex_literals; // Allow to use i as complex number, i.e.
 namespace filesys = std::filesystem;
 typedef std::complex<double> cdouble;
 
-Vector3cd vectorPotential(const double e0, const double w, const double b, const Vector3d &n, const Vector3d &eps, const Vector3cd &r, const cdouble t)
-{
-    const cdouble kR_dot_n = r.dot(n);        // r . n
-    const cdouble kB_r_n = b + 1i * kR_dot_n; // b + i r . n
-    const Vector3cd kR_cross_n = r.cross(n);  // r x n
-
-    cdouble a0 = c * e0 * pow(b, 2) / (w * pow(abs(kB_r_n), 2));                       // Magnitude of vector potential pulse
-    Vector3cd vec = eps + w / c * r.dot(eps.cross(n)) * kR_cross_n / kB_r_n;           // Vector term
-    cdouble exp1 = exp(-1i * w * (t - kR_dot_n / c));                                  // First exponential term
-    cdouble exp2 = exp(-w / (2 * c * (b + 1i * kR_dot_n)) * kR_cross_n.squaredNorm()); // Second exponential term
-
-    return a0 * vec * exp1 * exp2;
-}
-
-Vector3d electricField(const double e0, const double w, const double b, const Vector3d &n, const Vector3d &eps, const Vector3d &r, const double t)
-{
-    return -w * vectorPotential(e0, w, b, n, eps, r, t).imag();
-}
-
-Vector3d magneticField(const double e0, const double w, const double b, const Vector3d &n, const Vector3d &eps, const Vector3d &r, const double t)
-{
-    const double h = 1e-200;
-
-    const Vector3cd kA = vectorPotential(e0, w, b, n, eps, r, t);
-
-    Vector3cd dA_dx = (vectorPotential(e0, w, b, n, eps, r + Vector3d{h, 0, 0}, t) - kA) / h; // dA/dx
-    Vector3cd dA_dy = (vectorPotential(e0, w, b, n, eps, r + Vector3d{0, h, 0}, t) - kA) / h; // dA/dy
-    Vector3cd dA_dz = (vectorPotential(e0, w, b, n, eps, r + Vector3d{0, 0, h}, t) - kA) / h; // dA/dz
-
-    double x, y, z; // Magnitic field in respective axis
-    x = (dA_dy[2] - dA_dz[1]).real();
-    y = (dA_dz[0] - dA_dx[2]).real();
-    z = (dA_dx[1] - dA_dy[0]).real();
-
-    return {x, y, z};
-}
-
-// printf("magnitude (t = %f) = %f\n", t_start + step * dt, e_mag/b_mag);
-
 inline bool randomChance(double prob)
 {
     return (static_cast<double>(rand()) / RAND_MAX < prob);
@@ -62,19 +24,20 @@ int main(int argc, char *argv[])
     srand(0);
 
     // Check if given correct number of arguments
-    if (argc - 1 != 6)
+    if (argc - 1 != 7)
     {
-        printf("Requires 6 inputs but %i were given\n", argc - 1);
+        printf("Requires 7 inputs but %i were given\n", argc - 1);
         return -1;
     }
 
     // Process input arguments
-    const double e0 = std::stod(argv[1]); // Electric field amplitude
-    const double w = std::stod(argv[2]);  // Laser carrier frequency
-    const double b = std::stod(argv[3]);  // Characheristic width of the pulse
-    const double dt = std::stod(argv[4]); // Time step size
-    const std::string pol = argv[5];      // Polarisation
-    const std::string method = argv[6];   // Method for velocity update
+    const double e0 = std::stod(argv[1]);     // Electric field amplitude
+    const double w = std::stod(argv[2]);      // Laser carrier frequency
+    const double b = std::stod(argv[3]);      // Characheristic width of the pulse
+    const double dt = std::stod(argv[4]);     // Time step size
+    const double cycles = std::stod(argv[5]); // Number of cycles of laser to simulate
+    const std::string pol = argv[6];          // Polarisation
+    const std::string method = argv[7];       // Method for velocity update
 
     const Vector3d n = {0, 0, 1}; // Direction of propagation (z-axis)
     Vector3d eps;                 // polarization of laser field
@@ -91,6 +54,7 @@ int main(int argc, char *argv[])
         printf("Palarisation must be either 'linear' or 'circular', but '%s' was given\n", pol.c_str());
         return -1;
     }
+    eps.normalize();
 
     // Create updateVelocity function pointer
     Vector3d (*updateVelocity)(const std::string type, const Vector3d &v, const Vector3d &e, const Vector3d &b, double t);
@@ -121,8 +85,9 @@ int main(int argc, char *argv[])
         return -1;
     }
     // Create directories for postions and velocity
-    auto carbon_dir = cwd / ("ionisation/" + pol + "_" + method + "/carbon");
-    auto electron_dir = cwd / ("ionisation/" + pol + "_" + method + "/electron");
+    auto output_dir = cwd / ("ionisation/" + pol + "_" + method);
+    auto carbon_dir = output_dir / "carbon";
+    auto electron_dir = output_dir / "electron";
     filesys::create_directories(carbon_dir);
     filesys::create_directory(electron_dir);
 
@@ -165,7 +130,7 @@ int main(int argc, char *argv[])
 
     // Simulate ionisation by laser pulse
     size_t n_elctron = 0;
-    int steps = 10 * (2 * M_PI / w) / dt;
+    int steps = cycles * (2 * M_PI / w) / dt;
     printf("Number of steps = %i\nDo you want to run simulation? (y/n): ", steps);
     char ans;
     std::cin >> ans;
@@ -173,8 +138,10 @@ int main(int argc, char *argv[])
         return 0;
 
     printf("Start ionisation simulations\n");
+    std::ofstream time_array(output_dir / "time.tim");
     for (int step = 0; step < steps; step++)
     {
+        time_array << step * dt << "\n";
         // Open file to save positions and velocities
         std::ofstream carbon_pos_file(carbon_dir / (std::to_string(step) + ".pos"));
         std::ofstream carbon_vel_file(carbon_dir / (std::to_string(step) + ".vel"));
