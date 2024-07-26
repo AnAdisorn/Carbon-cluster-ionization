@@ -21,6 +21,8 @@ Initialsing and equilibrating carbon cluster
 ```
 https://github.com/user-attachments/assets/e6147f3f-eb0e-45b2-bcc6-8572f2ac020e
 
+![potential](https://github.com/user-attachments/assets/e67059a8-b6dc-4081-b154-182652c0d670)
+
 Simulating ionising cluster
 ```
 ./simulation <e0> <w> <b> <dt> <cycles> <polarization> <method>
