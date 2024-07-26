@@ -1,5 +1,5 @@
 # Carbon cluster ionisation
-Simulation of carbon cluster ionised by laser
+Simulation of carbon cluster ionised by gaussian laser focus
 
 
 ## Getting started
