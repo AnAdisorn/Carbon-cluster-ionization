@@ -26,6 +26,7 @@ Simulating ionising cluster
 ./simulation <e0> <w> <b> <dt> <cycles> <polarization> <method>
 ```
 https://github.com/user-attachments/assets/8fe7228d-4558-4ebb-bec1-9c2d3e3dd37c
+
 ![image](https://github.com/user-attachments/assets/7f084bd9-2ec8-49e2-996c-ab705f2ce2d3)
 
 ## Support
