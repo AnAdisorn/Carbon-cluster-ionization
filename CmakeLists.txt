@@ -8,47 +8,19 @@ project(carbon-cluster-ionization VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_compile_options(-Wall -Wextra)
-set(CMAKE_CXX_FLAGS "-O3")
-
-find_package(OpenMP)
-if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-    include_directories(/usr/local/include/)  # Include directory for omp.h
-endif()
+add_compile_options(-Wall -Wextra -O3)
 
 ############################################################
 # Create a library
 ############################################################
+
+include_directories(include)
 
 add_library(particle_container lib/particle_container.cpp)
 add_library(particle_interactions STATIC lib/particle_interactions.cpp)
 add_library(field_interactions STATIC lib/field_interactions.cpp)
 add_library(laser_field STATIC lib/laser_field.cpp)
 add_library(parameters STATIC lib/parameters.cpp)
-
-target_include_directories(particle_container
-    PUBLIC 
-        include
-)
-target_include_directories(particle_interactions
-    PUBLIC 
-       include
-)
-target_include_directories(field_interactions
-    PUBLIC 
-       include
-)
-target_include_directories(laser_field
-    PUBLIC 
-       include
-)
-target_include_directories(parameters
-    PUBLIC 
-       include
-)
 
 ############################################################
 # Create an executable
@@ -65,6 +37,12 @@ target_link_libraries(ionise_cluster
     PRIVATE 
         particle_container field_interactions laser_field parameters
 )
+
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(initialise_cluster PUBLIC OpenMP::OpenMP_CXX)
+    target_link_libraries(ionise_cluster PUBLIC OpenMP::OpenMP_CXX)
+endif()
 
 ############################################################
 # Create tests
