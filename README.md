@@ -17,7 +17,7 @@ make
 ## Usage
 Initialsing and equilibrating carbon cluster
 ```
-./equilibration <grid_size_x> <grid_size_y> <grid_size_z> [spacing] <steps> <dt>
+./initialise_cluster <grid_size_x> <grid_size_y> <grid_size_z> [spacing] <steps> <dt>
 ```
 https://github.com/user-attachments/assets/e6147f3f-eb0e-45b2-bcc6-8572f2ac020e
 
@@ -25,7 +25,7 @@ https://github.com/user-attachments/assets/e6147f3f-eb0e-45b2-bcc6-8572f2ac020e
 
 Simulating ionising cluster
 ```
-./simulation <e0> <w> <b> <dt> <cycles> <polarization> <method>
+./ionise_cluster <e0> <w> <b> <dt> <cycles> <polarization> <method>
 ```
 https://github.com/user-attachments/assets/8fe7228d-4558-4ebb-bec1-9c2d3e3dd37c
 
