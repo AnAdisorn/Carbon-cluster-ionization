@@ -3,17 +3,13 @@ Simulation of carbon cluster ionised by gaussian laser focus
 
 
 ## Installation
-'''
+```
 git clone https://github.com/AnAdisorn/Carbon-cluster-ionization.git
 mkdir build
 cd build
 cmake ..
 make
-'''
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```
 
 ## Description
 The code simulates the interaction of particles (initially carbons) with a laser pulse. The simulation consists of two stages:
