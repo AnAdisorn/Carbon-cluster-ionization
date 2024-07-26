@@ -1,5 +1,8 @@
 # Carbon cluster ionisation
-Simulation of carbon cluster ionised by gaussian laser focus
+The code simulates the interaction of particles (initially carbons) with a gaussian laser focus. The simulation consists of two stages:
+
+Equilibration: Particles are placed on a grid and interact with each other via Lennard-Jones potential until they reach thermal equilibrium.
+Ionization: The particles are exposed to a laser pulse, which can ionize them (remove electrons). The code tracks the positions, velocities, and ionization states of the particles throughout the pulse.
 
 
 ## Installation
@@ -11,23 +14,19 @@ cmake ..
 make
 ```
 
-## Description
-The code simulates the interaction of particles (initially carbons) with a laser pulse. The simulation consists of two stages:
-
-Equilibration: Particles are placed on a grid and interact with each other via Lennard-Jones potential until they reach thermal equilibrium.
-Ionization: The particles are exposed to a laser pulse, which can ionize them (remove electrons). The code tracks the positions, velocities, and ionization states of the particles throughout the pulse.
-
-
-
-## Visuals
-![image](https://github.com/user-attachments/assets/7f084bd9-2ec8-49e2-996c-ab705f2ce2d3)
-
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Initialsing and equilibrating carbon cluster
+```
+./equilibration <grid_size_x> <grid_size_y> <grid_size_z> [spacing] <steps> <dt>
+```
+https://github.com/user-attachments/assets/e6147f3f-eb0e-45b2-bcc6-8572f2ac020e
+
+Simulating ionising cluster
+```
+./simulation <e0> <w> <b> <dt> <cycles> <polarization> <method>
+```
+https://github.com/user-attachments/assets/8fe7228d-4558-4ebb-bec1-9c2d3e3dd37c
+![image](https://github.com/user-attachments/assets/7f084bd9-2ec8-49e2-996c-ab705f2ce2d3)
 
 ## Support
 Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
