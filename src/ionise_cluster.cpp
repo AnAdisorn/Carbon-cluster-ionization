@@ -152,7 +152,6 @@ int main(int argc, char *argv[])
     std::ofstream time_array(output_dir / "time.tim");
     for (int step = 0; step < steps; step++)
     {
-        size_t i, j; // for loop indexing
         // Write time step to output file
         time_array << step * dt << "\n";
         // Open file to save positions and velocities
@@ -166,7 +165,7 @@ int main(int argc, char *argv[])
         std::cout << "\rstep = " << step << ", n_particle = " << n_particle << std::flush;
 
         // Write position and velocity to file
-        for (i = 0; i < n_particle; i++)
+        for (size_t i = 0; i < n_particle; i++)
         {
             std::string type = container.getType(i);
             std::string type_prefix = type.substr(0, 1);
@@ -193,7 +192,7 @@ int main(int argc, char *argv[])
 #pragma omp parallel for
         // Half position update
         {
-            for (i = 0; i < n_particle; i++)
+            for (size_t i = 0; i < n_particle; i++)
             {
                 std::string type = container.getType(i);
                 std::string type_prefix = type.substr(0, 1);
@@ -207,7 +206,7 @@ int main(int argc, char *argv[])
 
         // Calculate field
         {
-            for (i = 0; i < n_particle; i++)
+            for (size_t i = 0; i < n_particle; i++)
             {
                 std::string type_i = container.getType(i);
                 std::string type_prefix_i = type_i.substr(0, 1);
@@ -220,7 +219,7 @@ int main(int argc, char *argv[])
                 container.addFields(i, e_field, b_field);
 
                 // Calculate E/B-field between particles
-                for (j = i + 1; j < n_particle; j++)
+                for (size_t j = i + 1; j < n_particle; j++)
                 {
                     std::string type_j = container.getType(j);
                     std::string type_prefix_j = type_j.substr(0, 1);
@@ -238,7 +237,7 @@ int main(int argc, char *argv[])
 #pragma omp parallel for
         // Velocity/Position/Ionisation updates
         {
-            for (i = 0; i < n_particle; i++)
+            for (size_t i = 0; i < n_particle; i++)
             {
                 std::string type = container.getType(i);
                 std::string type_prefix = type.substr(0, 1);
