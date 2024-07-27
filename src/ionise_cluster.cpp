@@ -3,6 +3,10 @@
 #include "laser_field.h"
 #include "parameters.h"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -28,6 +32,13 @@ int main(int argc, char *argv[])
     {
         printf("Requires 7 inputs but %i were given\n", argc - 1);
         return -1;
+    }
+
+    // OMP
+#pragma omp parallel
+    {
+#pragma omp single
+        std::cout << "Number of threads = " << omp_get_num_threads() << std::endl;
     }
 
     // Process input arguments
@@ -141,6 +152,8 @@ int main(int argc, char *argv[])
     std::ofstream time_array(output_dir / "time.tim");
     for (int step = 0; step < steps; step++)
     {
+        size_t i, j; // for loop indexing
+        // Write time step to output file
         time_array << step * dt << "\n";
         // Open file to save positions and velocities
         std::ofstream carbon_pos_file(carbon_dir / (std::to_string(step) + ".pos"));
@@ -152,14 +165,13 @@ int main(int argc, char *argv[])
         n_particle = container.size();
         std::cout << "\rstep = " << step << ", n_particle = " << n_particle << std::flush;
 
-        // Half position update
-        for (size_t i = 0; i < n_particle; i++)
+        // Write position and velocity to file
+        for (i = 0; i < n_particle; i++)
         {
             std::string type = container.getType(i);
             std::string type_prefix = type.substr(0, 1);
             Vector3d r = container.getPosition(i);
             Vector3d v = container.getVelocity(i);
-            // Write position and velocity to file
             if (type_prefix.compare("C") == 0)
             {
                 carbon_pos_file << r[0] << " " << r[1] << " " << r[2] << "\n";
@@ -176,30 +188,43 @@ int main(int argc, char *argv[])
                 printf("Found particle with unrecognised prefix: %s", type.c_str());
                 return -1;
             }
-            r = updateHalfPosition(r, v, dt);
-            container.setPosition(i, r);
+        }
+
+#pragma omp parallel for
+        // Half position update
+        {
+            for (i = 0; i < n_particle; i++)
+            {
+                std::string type = container.getType(i);
+                std::string type_prefix = type.substr(0, 1);
+                Vector3d r = container.getPosition(i);
+                Vector3d v = container.getVelocity(i);
+
+                r = updateHalfPosition(r, v, dt);
+                container.setPosition(i, r);
+            }
         }
 
         // Calculate field
-        for (size_t i = 0; i < n_particle; i++)
         {
-            std::string type_i = container.getType(i);
-            std::string type_prefix_i = type_i.substr(0, 1);
-            Vector3d r_i = container.getPosition(i);
-            Vector3d v_i = container.getVelocity(i);
-
-            // Calculate E/B-field from laser pulse
-            Vector3d e_field = electricField(e0, w, b, n, eps, r_i, step * dt);
-            Vector3d b_field = magneticField(e0, w, b, n, eps, r_i, step * dt);
-            container.addFields(i, e_field, b_field);
-
-            // Calculate E/B-field between particles
-            for (size_t j = i + 1; j < n_particle; j++)
+            for (i = 0; i < n_particle; i++)
             {
-                std::string type_j = container.getType(j);
-                std::string type_prefix_j = type_j.substr(0, 1);
-                // if (type_prefix_i.compare(type_prefix_j) == 0) // check if the second particle is the same kind
+                std::string type_i = container.getType(i);
+                std::string type_prefix_i = type_i.substr(0, 1);
+                Vector3d r_i = container.getPosition(i);
+                Vector3d v_i = container.getVelocity(i);
+
+                // Calculate E/B-field from laser pulse
+                Vector3d e_field = electricField(e0, w, b, n, eps, r_i, step * dt);
+                Vector3d b_field = magneticField(e0, w, b, n, eps, r_i, step * dt);
+                container.addFields(i, e_field, b_field);
+
+                // Calculate E/B-field between particles
+                for (j = i + 1; j < n_particle; j++)
                 {
+                    std::string type_j = container.getType(j);
+                    std::string type_prefix_j = type_j.substr(0, 1);
+
                     Vector3d r_j = container.getPosition(j);
                     Vector3d v_j = container.getVelocity(j);
 
@@ -209,33 +234,37 @@ int main(int argc, char *argv[])
                 }
             }
         }
+
+#pragma omp parallel for
         // Velocity/Position/Ionisation updates
-        for (size_t i = 0; i < n_particle; i++)
         {
-            std::string type = container.getType(i);
-            std::string type_prefix = type.substr(0, 1);
-            Vector3d r = container.getPosition(i);
-            Vector3d v = container.getVelocity(i);
-
-            auto fields = container.getFields(i);
-            // Calculate new position and velocity
-            v = updateVelocity(type, v, fields[0], fields[1], dt);
-            r = updateHalfPosition(r, v, dt);
-            // Update particles attribute
-            container.setPosition(i, r);
-            container.setVelocity(i, v);
-
-            // Ionisation
-            if (!(IonisationParametersMap.find(type) == IonisationParametersMap.end())) // ensure if polarizable according to ionisationParametersMap
+            for (i = 0; i < n_particle; i++)
             {
-                Vector3d e_field = electricField(e0, w, b, n, eps, r, step * dt);
-                if (randomChance(1 - exp(-ionisationRate(type, e_field.norm()) * dt)))
+                std::string type = container.getType(i);
+                std::string type_prefix = type.substr(0, 1);
+                Vector3d r = container.getPosition(i);
+                Vector3d v = container.getVelocity(i);
+
+                auto fields = container.getFields(i);
+                // Calculate new position and velocity
+                v = updateVelocity(type, v, fields[0], fields[1], dt);
+                r = updateHalfPosition(r, v, dt);
+                // Update particles attribute
+                container.setPosition(i, r);
+                container.setVelocity(i, v);
+                // Ionisation
+                if (!(IonisationParametersMap.find(type) == IonisationParametersMap.end())) // ensure if polarizable according to ionisationParametersMap
                 {
-                    // Add electron with random position and velocity
-                    container.addParticle("electron_" + std::to_string(n_elctron), "e-", r + bohrRadius(type) * randomUnitVector(), v);
-                    n_elctron++;
-                    // Change type of particle to the polarized one
-                    container.setType(i, upperType(type));
+                    Vector3d e_field = electricField(e0, w, b, n, eps, r, step * dt);
+                    if (randomChance(1 - exp(-ionisationRate(type, e_field.norm()) * dt)))
+#pragma omp critical
+                    {
+                        // Add electron with random position and velocity
+                        container.addParticle("electron_" + std::to_string(n_elctron), "e-", r + bohrRadius(type) * randomUnitVector(), v);
+                        n_elctron++;
+                        // Change type of particle to the polarized one
+                        container.setType(i, upperType(type));
+                    }
                 }
             }
         }
