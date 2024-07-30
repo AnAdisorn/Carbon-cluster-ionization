@@ -139,9 +139,18 @@ int main(int argc, char *argv[])
     }
     printf("Loaded %zu particles\n", n_particle);
 
+    // Prepare thread lock
+    std::vector<omp_lock_t> thread_locks(n_particle);
+    for (size_t i = 0; i < n_particle; i++)
+    {
+        omp_init_lock(&thread_locks[i]);
+    }
+
     // Simulate ionisation by laser pulse
     size_t n_elctron = 0;
     int steps = cycles * (2 * M_PI / w) / dt;
+
+    // Confirm simulation
     printf("Number of steps = %i\nDo you want to run simulation? (y/n): ", steps);
     char ans;
     std::cin >> ans;
@@ -191,79 +200,80 @@ int main(int argc, char *argv[])
 
 #pragma omp parallel for
         // Half position update
+        for (size_t i = 0; i < n_particle; i++)
         {
-            for (size_t i = 0; i < n_particle; i++)
-            {
-                std::string type = container.getType(i);
-                std::string type_prefix = type.substr(0, 1);
-                Vector3d r = container.getPosition(i);
-                Vector3d v = container.getVelocity(i);
+            std::string type = container.getType(i);
+            std::string type_prefix = type.substr(0, 1);
+            Vector3d r = container.getPosition(i);
+            Vector3d v = container.getVelocity(i);
 
-                r = updateHalfPosition(r, v, dt);
-                container.setPosition(i, r);
-            }
+            r = updateHalfPosition(r, v, dt);
+            container.setPosition(i, r);
         }
 
+#pragma omp parallel for
         // Calculate field
+        for (size_t i = 0; i < n_particle; i++)
         {
-            for (size_t i = 0; i < n_particle; i++)
+            std::string type_i = container.getType(i);
+            std::string type_prefix_i = type_i.substr(0, 1);
+            Vector3d r_i = container.getPosition(i);
+            Vector3d v_i = container.getVelocity(i);
+
+            // Calculate E/B-field from laser pulse
+            Vector3d e_field = electricField(e0, w, b, n, eps, r_i, step * dt);
+            Vector3d b_field = magneticField(e0, w, b, n, eps, r_i, step * dt);
+            container.addFields(i, e_field, b_field);
+
+            // Calculate E/B-field between particles
+            for (size_t j = i + 1; j < n_particle; j++)
             {
-                std::string type_i = container.getType(i);
-                std::string type_prefix_i = type_i.substr(0, 1);
-                Vector3d r_i = container.getPosition(i);
-                Vector3d v_i = container.getVelocity(i);
+                std::string type_j = container.getType(j);
+                std::string type_prefix_j = type_j.substr(0, 1);
 
-                // Calculate E/B-field from laser pulse
-                Vector3d e_field = electricField(e0, w, b, n, eps, r_i, step * dt);
-                Vector3d b_field = magneticField(e0, w, b, n, eps, r_i, step * dt);
-                container.addFields(i, e_field, b_field);
+                Vector3d r_j = container.getPosition(j);
+                Vector3d v_j = container.getVelocity(j);
 
-                // Calculate E/B-field between particles
-                for (size_t j = i + 1; j < n_particle; j++)
-                {
-                    std::string type_j = container.getType(j);
-                    std::string type_prefix_j = type_j.substr(0, 1);
-
-                    Vector3d r_j = container.getPosition(j);
-                    Vector3d v_j = container.getVelocity(j);
-
-                    auto fields = calculatePairFields(type_i, type_j, r_i, r_j, v_i, v_j);
-                    container.addFields(i, fields[0], fields[2]);
-                    container.addFields(j, fields[1], fields[3]);
-                }
+                auto fields = calculatePairFields(type_i, type_j, r_i, r_j, v_i, v_j);
+                container.addFields(i, fields[0], fields[2]);
+                omp_set_lock(&thread_locks[j]); // locking access to particle j
+                container.addFields(j, fields[1], fields[3]);
+                omp_unset_lock(&thread_locks[j]); // unlocking access to particle j
             }
         }
 
 #pragma omp parallel for
         // Velocity/Position/Ionisation updates
+        for (size_t i = 0; i < n_particle; i++)
         {
-            for (size_t i = 0; i < n_particle; i++)
-            {
-                std::string type = container.getType(i);
-                std::string type_prefix = type.substr(0, 1);
-                Vector3d r = container.getPosition(i);
-                Vector3d v = container.getVelocity(i);
+            std::string type = container.getType(i);
+            std::string type_prefix = type.substr(0, 1);
+            Vector3d r = container.getPosition(i);
+            Vector3d v = container.getVelocity(i);
 
-                auto fields = container.getFields(i);
-                // Calculate new position and velocity
-                v = updateVelocity(type, v, fields[0], fields[1], dt);
-                r = updateHalfPosition(r, v, dt);
-                // Update particles attribute
-                container.setPosition(i, r);
-                container.setVelocity(i, v);
-                // Ionisation
-                if (!(IonisationParametersMap.find(type) == IonisationParametersMap.end())) // ensure if polarizable according to ionisationParametersMap
+            auto fields = container.getFields(i);
+            // Calculate new position and velocity
+            v = updateVelocity(type, v, fields[0], fields[1], dt);
+            r = updateHalfPosition(r, v, dt);
+            // Update particles attribute
+            container.setPosition(i, r);
+            container.setVelocity(i, v);
+            // Ionisation
+            if (!(IonisationParametersMap.find(type) == IonisationParametersMap.end())) // ensure if polarizable according to ionisationParametersMap
+            {
+                Vector3d e_field = electricField(e0, w, b, n, eps, r, step * dt);
+                if (randomChance(1 - exp(-ionisationRate(type, e_field.norm()) * dt)))
                 {
-                    Vector3d e_field = electricField(e0, w, b, n, eps, r, step * dt);
-                    if (randomChance(1 - exp(-ionisationRate(type, e_field.norm()) * dt)))
 #pragma omp critical
                     {
                         // Add electron with random position and velocity
                         container.addParticle("electron_" + std::to_string(n_elctron), "e-", r + bohrRadius(type) * randomUnitVector(), v);
+                        thread_locks.push_back(omp_lock_t{});
+                        omp_init_lock(&thread_locks.back());
                         n_elctron++;
-                        // Change type of particle to the polarized one
-                        container.setType(i, upperType(type));
                     }
+                    // Change type of particle to the polarized one
+                    container.setType(i, upperType(type));
                 }
             }
         }
