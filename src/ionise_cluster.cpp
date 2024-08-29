@@ -140,10 +140,12 @@ int main(int argc, char *argv[])
     printf("Loaded %zu particles\n", n_particle);
 
     // Prepare thread lock
-    std::vector<omp_lock_t> thread_locks(n_particle);
+    omp_lock_t add_particle_lock;
+    omp_init_lock(&add_particle_lock);
+    std::vector<omp_lock_t> thread_particle_locks(n_particle);
     for (size_t i = 0; i < n_particle; i++)
     {
-        omp_init_lock(&thread_locks[i]);
+        omp_init_lock(&thread_particle_locks[i]);
     }
 
     // Simulate ionisation by laser pulse
@@ -236,9 +238,9 @@ int main(int argc, char *argv[])
 
                 auto fields = calculatePairFields(type_i, type_j, r_i, r_j, v_i, v_j);
                 container.addFields(i, fields[0], fields[2]);
-                omp_set_lock(&thread_locks[j]); // locking access to particle j
+                omp_set_lock(&thread_particle_locks[j]); // locking access to particle j
                 container.addFields(j, fields[1], fields[3]);
-                omp_unset_lock(&thread_locks[j]); // unlocking access to particle j
+                omp_unset_lock(&thread_particle_locks[j]); // unlocking access to particle j
             }
         }
 
@@ -264,14 +266,15 @@ int main(int argc, char *argv[])
                 Vector3d e_field = electricField(e0, w, b, n, eps, r, step * dt);
                 if (randomChance(1 - exp(-ionisationRate(type, e_field.norm()) * dt)))
                 {
-#pragma omp critical
+                    omp_set_lock(&add_particle_lock);
                     {
                         // Add electron with random position and velocity
                         container.addParticle("electron_" + std::to_string(n_elctron), "e-", r + bohrRadius(type) * randomUnitVector(), v);
-                        thread_locks.push_back(omp_lock_t{});
-                        omp_init_lock(&thread_locks.back());
+                        thread_particle_locks.push_back(omp_lock_t{});
+                        omp_init_lock(&thread_particle_locks.back());
                         n_elctron++;
                     }
+                    omp_unset_lock(&add_particle_lock);
                     // Change type of particle to the polarized one
                     container.setType(i, upperType(type));
                 }
